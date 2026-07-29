@@ -118,7 +118,7 @@ export default function App() {
   const [isLogged, setisLogged] = useState(false);
   const [isLoggingIn, setIsLoggingIn] = useState(false);
 
-    async function loginGoogle() {
+  async function loginGoogle() {
     const {data, error} = await supabase.auth.signInWithOAuth({
       provider: 'google'
     })
@@ -138,9 +138,6 @@ export default function App() {
     alert("Log Out concluido!")
     console.log("A")
   }
-
-
-
 
 async function verificarLogin() {
   const { data: { user } } = await supabase.auth.getUser();
@@ -182,10 +179,39 @@ async function verificarLogin() {
     setCurrentUser(loggedMember);
     setisLogged(true);
     setIsLoggingIn(false);
+
+    buscarEquipe();
   }    
 }
 
+async function buscarEquipe() {
+  const { data, error } = await supabase
+    .from('usuarios_autorizados')
+    .select('id, email, tipo_acesso, eh_moderador');
 
+  if (error) {
+    console.error("Erro ao carregar a equipe:", error);
+    return;
+  }
+
+  if (data) {
+    const equipeDoBanco: Member[] = data.map((m) => {
+      const nome = generateNameFromEmail(m.email);
+      return {
+        id: m.id,
+        email: m.email,
+        name: nome,
+        mainRole: m.tipo_acesso || "",
+        isModerador: m.eh_moderador || false,
+        photo: `https://ui-avatars.com/api/?name=${encodeURIComponent(nome)}&background=random&color=fff`,
+        isOnline: false,
+        lastSeen: "offline"
+      };
+    });
+    
+    setMembers(equipeDoBanco);
+  }
+  }
 
 
   useEffect (() =>{
@@ -209,7 +235,6 @@ async function verificarLogin() {
   const [newMemberIsMod, setNewMemberIsMod] = useState(false);
 
   const [showUnlockAnim, setShowUnlockAnim] = useState(false);
-  const [loginError, setLoginError] = useState("");
   const [showModInfo, setShowModInfo] = useState(false);
   // #endregion
 
@@ -451,12 +476,6 @@ async function verificarLogin() {
           <p className="text-gray-400 text-center mb-8 text-sm font-medium">
             Acesso restrito para a melhor área do solares.
           </p>
-          
-          {loginError && (
-            <div className="w-full bg-red-500/10 border border-red-500/50 text-red-400 px-4 py-3 rounded-xl mb-6 text-sm text-center animate-pulse">
-              {loginError}
-            </div>
-          )}
 
           {showUnlockAnim ? (
             <div className="flex flex-col items-center justify-center py-4 animate-in fade-in zoom-in duration-300">
