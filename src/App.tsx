@@ -846,7 +846,7 @@ async function verificarLogin() {
               </div>
 
               <button 
-                onClick={() => setCurrentUser(null)}
+                onClick={() => logoutGoogle()}
                 className="absolute -bottom-8 right-0 bg-gray-800 text-white text-xs px-3 py-1.5 rounded-md opacity-0 group-hover:opacity-100 transition-opacity shadow-lg flex items-center space-x-1 whitespace-nowrap z-50"
               >
                 <LogOut size={12} />
