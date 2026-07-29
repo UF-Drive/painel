@@ -1,4 +1,4 @@
-'use client'
+// 'use client'
 
 // #region -- Bibliotecas Importadas ---
 import React, { useState, useEffect } from 'react';
