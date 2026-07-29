@@ -1,5 +1,9 @@
 // 'use client'
 
+// Parte 1 - coleta de valores da telemetria
+// Parte 2 - manipulacao de dados equipe
+// Parte 3 - 
+
 // #region -- Bibliotecas Importadas ---
 import React, { useState, useEffect } from 'react';
 import { supabase } from "./lib/supabase";
@@ -21,6 +25,16 @@ const initialMultiData = {
   series3: Array.from({ length: 20 }, () => Math.floor(Math.random() * 20) + 5),
 };
 // #endregion
+
+
+
+
+
+
+///////////////////////////////////
+// PARTE TROCA 1
+///////////////////////////////////
+
 
 // #region --- Gerador de Células Iniciais para o BMS ---
 const generateInitialCells = (count: number) => {
@@ -158,31 +172,55 @@ export default function App() {
     console.log("A")
   }
 
-  async function verificarLogin() {
 
-    const { data: { user } } = await supabase.auth.getUser()
 
-    if (user) {
-      const { data } = await supabase
-        .from('usuarios_autorizados')
-        .select('email')
-        .eq('email', user.email)
-        .single()
-        
-      if (!data) {
-        alert("Voce nao possui acesso a essa aplicaçao!")
-        console.log("Nao deu certo!")
-        await supabase.auth.signOut() 
-        return    
-      }
 
-      setIsLoggingIn(true);
+async function verificarLogin() {
+  const { data: { user } } = await supabase.auth.getUser();
 
-      alert("Acesso concedido!")
-      console.log("Deu boa!")
-      setisLogged(true)
-    }    
-  }
+  if (user) {
+    // 1. Busca o acesso e as permissões no banco de dados
+    // Importante: 'tipo_acesso' - admin ou nao; 'status' - moderador ou nao
+    const { data, error } = await supabase
+      .from('usuarios_autorizados')
+      .select('id, email, status, tipo_acesso') 
+      .eq('email', user.email)
+      .single();
+      
+    if (error || !data) {
+      alert("Você não possui acesso a essa aplicação!");
+      await supabase.auth.signOut(); 
+      return;    
+    }
+
+    setIsLoggingIn(true);
+
+    // 2. Coleta os dados do perfil diretamente do Google
+    const googleName = user.user_metadata.full_name || generateNameFromEmail(user.email || "");
+    const googlePhoto = user.user_metadata.avatar_url || "";
+
+    // 3. Monta o objeto usando a interface Member
+    const loggedMember: Member = {
+      id: data.id, 
+      email: user.email!,
+      name: googleName,
+      mainRole: data.tipo_acesso || "", 
+      isModerador: data.status || false,
+      photo: googlePhoto,
+      isOnline: true,
+      lastSeen: "agora"
+    };
+
+    // 4. Aplica o usuário no sistema e libera a tela
+    setCurrentUser(loggedMember);
+    setisLogged(true);
+    setIsLoggingIn(false);
+
+  }    
+}
+
+
+
 
   useEffect (() =>{
     verificarLogin()
@@ -233,7 +271,7 @@ export default function App() {
   useEffect(() => {
       const metaThemeColor = document.querySelector('meta[name="theme-color"]');
 
-      // REGRA 1: Se estiver na tela de Login (sem currentUser), 
+      // REGRA 1: Se estiver na tela de   in (sem currentUser), 
       // a interface é escura por padrão.
       if (!currentUser) {
         if (metaThemeColor) metaThemeColor.setAttribute('content', '#111827');
@@ -348,6 +386,12 @@ export default function App() {
     setMembers(members.map(m => m.id === id ? { ...m, [field]: value } : m));
   };
   // #endregion
+
+  
+
+  ///////////////////////////////////
+  // PARTE TROCA 1
+  ///////////////////////////////////
 
   // #region Cálculos Derivados
   const totalBmsVoltage = cells.reduce((acc, cell) => acc + cell.voltage, 0);
