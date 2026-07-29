@@ -429,7 +429,19 @@ async function buscarEquipe() {
     setNewMemberIsMod(false);
   };
 
-  const handleRemoveMember = (id: number) => {
+const handleRemoveMember = async (id: number) => {
+    // 1. Envia a requisição para deletar o registro no banco de dados
+    const { error } = await supabase
+      .from('usuarios_autorizados')
+      .delete()
+      .eq('id', id); // Filtra pelo ID exato do usuário clicado
+
+    if (error) {
+      alert("Erro ao remover membro: " + error.message);
+      return;
+    }
+
+    // 2. Se deu certo no banco, remove da tela instantaneamente
     setMembers(members.filter(m => m.id !== id));
   };
 
@@ -583,7 +595,7 @@ async function buscarEquipe() {
 
 
   // #region Restrição de Acesso (Sem Função Especial)
-  if (currentUser && currentUser.mainRole === "") {
+  if (currentUser && !currentUser.isModerador && currentUser.mainRole === "") {
     return (
       <div className="min-h-screen w-full flex items-center justify-center bg-gray-900 text-white font-sans p-4 relative overflow-hidden">
         <div className="max-w-md w-full bg-gray-800 border border-red-500/30 rounded-3xl p-8 shadow-2xl flex flex-col items-center relative z-10">
