@@ -183,7 +183,7 @@ async function verificarLogin() {
     // Importante: 'tipo_acesso' - admin ou nao; 'status' - moderador ou nao
     const { data, error } = await supabase
       .from('usuarios_autorizados')
-      .select('email') 
+      .select('id, email, status, tipo_acesso') 
       .eq('email', user.email)
       .single();
       
