@@ -19,11 +19,6 @@ import {
 
 // #region --- Mock Data Inicial ---
 const initialMainData = Array.from({ length: 40 }, () => Math.floor(Math.random() * 50) + 20);
-const initialMultiData = {
-  series1: Array.from({ length: 20 }, () => Math.floor(Math.random() * 30) + 60),
-  series2: Array.from({ length: 20 }, () => Math.floor(Math.random() * 40) + 20),
-  series3: Array.from({ length: 20 }, () => Math.floor(Math.random() * 20) + 5),
-};
 // #endregion
 
 
@@ -250,7 +245,6 @@ async function buscarEquipe() {
 
   // #region Estados - Dados de Telemetria
   const [mainData, setMainData] = useState(initialMainData);
-  const [multiData, setMultiData] = useState(initialMultiData);
   const [rpm, setRpm] = useState(1450);
   const [cells, setCells] = useState(generateInitialCells(32));
   const [speed, setSpeed] = useState(5); 
@@ -311,12 +305,6 @@ async function buscarEquipe() {
         newData.push(Math.max(10, Math.min(90, lastVal + (Math.random() * 10 - 5))));
         return newData;
       });
-
-      setMultiData(prev => ({
-        series1: [...prev.series1.slice(1), Math.max(50, Math.min(100, prev.series1[prev.series1.length - 1] + (Math.random() * 10 - 5)))],
-        series2: [...prev.series2.slice(1), Math.max(20, Math.min(70, prev.series2[prev.series2.length - 1] + (Math.random() * 10 - 5)))],
-        series3: [...prev.series3.slice(1), Math.max(0, Math.min(30, prev.series3[prev.series3.length - 1] + (Math.random() * 6 - 3)))]
-      }));
 
       setRpm(prev => Math.floor(prev + (Math.random() * 50 - 25)));
       
@@ -443,7 +431,22 @@ const handleRemoveMember = async (email: string) => {
     setMembers(members.filter(m => m.email !== email));
   };
 
-  const handleUpdateMemberRole = (id: number, field: keyof Member, value: string | boolean) => {
+const handleUpdateMemberRole = async (id: number, field: keyof Member, value: string | boolean) => {
+    // 1. Mapeia a variável do frontend para o nome correto da coluna no banco
+    const colunaSupabase = field === 'mainRole' ? 'tipo_acesso' : 'eh_moderador';
+
+    // 2. Envia a atualização para o Supabase
+    const { error } = await supabase
+      .from('usuarios_autorizados')
+      .update({ [colunaSupabase]: value })
+      .eq('id', id);
+
+    if (error) {
+      alert("Erro ao atualizar cargo: " + error.message);
+      return;
+    }
+
+    // 3. Atualiza a interface local apenas se a operação no banco der certo
     setMembers(members.map(m => m.id === id ? { ...m, [field]: value } : m));
   };
   // #endregion
@@ -531,14 +534,6 @@ const handleRemoveMember = async (email: string) => {
                 )}
                 <span className="text-[15px]">{isLoggingIn ? 'Verificando credenciais...' : 'Entrar com o Google'}</span>
               </button>
-
-              {/* <button 
-                onClick={() => handleGoogleLogin(true)}
-                disabled={isLoggingIn}
-                className="mt-4 text-xs text-gray-500 hover:text-gray-300 transition-colors underline decoration-gray-600 underline-offset-4 disabled:opacity-50"
-              >
-                Simular login com erro
-              </button> */}
             </div>
           )}
           
