@@ -180,10 +180,10 @@ async function verificarLogin() {
 
   if (user) {
     // 1. Busca o acesso e as permissões no banco de dados
-    // Importante: 'tipo_acesso' - admin ou nao; 'status' - moderador ou nao
+    // Importante: 'tipo_acesso' - admin ou nao; 'eh_moderador' - moderador ou nao
     const { data, error } = await supabase
       .from('usuarios_autorizados')
-      .select('id, email, status, tipo_acesso') 
+      .select('id, email, eh_moderador, tipo_acesso') 
       .eq('email', user.email)
       .single();
       
@@ -205,7 +205,7 @@ async function verificarLogin() {
       email: user.email!,
       name: googleName,
       mainRole: data.tipo_acesso || "", 
-      isModerador: data.status || false,
+      isModerador: data.eh_moderador || false,
       photo: googlePhoto,
       isOnline: true,
       lastSeen: "agora"
@@ -215,7 +215,6 @@ async function verificarLogin() {
     setCurrentUser(loggedMember);
     setisLogged(true);
     setIsLoggingIn(false);
-
   }    
 }
 
@@ -330,8 +329,8 @@ async function verificarLogin() {
       setRpm(prev => Math.floor(prev + (Math.random() * 50 - 25)));
       
       setSpeed(prev => {
-        let variation = prev + (Math.random() * 2 - 1);
-        let nextSpeed = Math.round(variation);
+        const variation = prev + (Math.random() * 2 - 1);
+        const nextSpeed = Math.round(variation);
         if (nextSpeed > 10) return 9; 
         if (nextSpeed < 0) return 1; 
         return nextSpeed;
@@ -550,7 +549,7 @@ async function verificarLogin() {
             Sua conta não possui uma função especial atribuída. Você perdeu o acesso aos dados do site. Contate um moderador.
           </p>
           <button 
-            onClick={() => setCurrentUser(null)}
+            onClick={() => logoutGoogle()}
             className="w-full bg-gray-700 hover:bg-gray-600 text-white font-bold py-3 rounded-xl transition-all"
           >
             Sair da Conta
