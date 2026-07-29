@@ -429,28 +429,24 @@ async function buscarEquipe() {
     setNewMemberIsMod(false);
   };
 
-const handleRemoveMember = async (id: number) => {
-    // 1. Envia a requisição para deletar o registro no banco de dados
+const handleRemoveMember = async (email: string) => {
     const { error } = await supabase
       .from('usuarios_autorizados')
       .delete()
-      .eq('id', id); // Filtra pelo ID exato do usuário clicado
+      .eq('email', email);
 
     if (error) {
       alert("Erro ao remover membro: " + error.message);
       return;
     }
 
-    // 2. Se deu certo no banco, remove da tela instantaneamente
-    setMembers(members.filter(m => m.id !== id));
+    setMembers(members.filter(m => m.email !== email));
   };
 
   const handleUpdateMemberRole = (id: number, field: keyof Member, value: string | boolean) => {
     setMembers(members.map(m => m.id === id ? { ...m, [field]: value } : m));
   };
   // #endregion
-
-  
 
   ///////////////////////////////////
   // PARTE TROCA 1
@@ -1143,7 +1139,7 @@ const handleRemoveMember = async (id: number) => {
                               </label>
 
                               <button 
-                                onClick={() => handleRemoveMember(member.id)}
+                                onClick={() => handleRemoveMember(member.email)}
                                 disabled={member.email === currentUser.email}
                                 className="p-1.5 md:p-2 text-red-500 hover:bg-red-500/10 hover:text-red-600 rounded-lg md:rounded-xl transition-all disabled:opacity-30 disabled:hover:bg-transparent disabled:cursor-not-allowed"
                                 title={member.email === currentUser.email ? "Você não pode remover a si mesmo" : "Remover Membro"}
