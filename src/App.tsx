@@ -431,23 +431,23 @@ const handleRemoveMember = async (email: string) => {
     setMembers(members.filter(m => m.email !== email));
   };
 
-const handleUpdateMemberRole = async (id: number, field: keyof Member, value: string | boolean) => {
-    // 1. Mapeia a variável do frontend para o nome correto da coluna no banco
+const handleUpdateMemberRole = async (email: string, field: keyof Member, value: string | boolean) => {
+    // 1. Descobre qual coluna do Supabase precisa ser alterada
     const colunaSupabase = field === 'mainRole' ? 'tipo_acesso' : 'eh_moderador';
 
-    // 2. Envia a atualização para o Supabase
+    // 2. Manda o Supabase atualizar a linha correspondente a este e-mail
     const { error } = await supabase
       .from('usuarios_autorizados')
       .update({ [colunaSupabase]: value })
-      .eq('id', id);
+      .eq('email', email);
 
     if (error) {
       alert("Erro ao atualizar cargo: " + error.message);
       return;
     }
 
-    // 3. Atualiza a interface local apenas se a operação no banco der certo
-    setMembers(members.map(m => m.id === id ? { ...m, [field]: value } : m));
+    // 3. Se o banco atualizou com sucesso, muda na tela
+    setMembers(members.map(m => m.email === email ? { ...m, [field]: value } : m));
   };
   // #endregion
 
@@ -1113,7 +1113,7 @@ const handleUpdateMemberRole = async (id: number, field: keyof Member, value: st
                               <div className="relative">
                                 <select 
                                   value={member.mainRole}
-                                  onChange={(e: React.ChangeEvent<HTMLSelectElement>) => handleUpdateMemberRole(member.id, 'mainRole', e.target.value)}
+                                  onChange={(e: React.ChangeEvent<HTMLSelectElement>) => handleUpdateMemberRole(member.email, 'mainRole', e.target.value)}
                                   className={`appearance-none text-[10px] md:text-sm px-2 md:px-3 py-1 md:py-1.5 pr-6 md:pr-8 rounded-lg border focus:ring-2 focus:ring-orange-500 outline-none ${darkMode ? 'bg-gray-900 border-gray-600 text-gray-200' : 'bg-gray-50 border-gray-300'}`}
                                 >
                                   <option value="">Sem Função Especial</option>
@@ -1127,7 +1127,7 @@ const handleUpdateMemberRole = async (id: number, field: keyof Member, value: st
                                 <input 
                                   type="checkbox" 
                                   checked={member.isModerador}
-                                  onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleUpdateMemberRole(member.id, 'isModerador', e.target.checked)}
+                                  onChange={(e: React.ChangeEvent<HTMLInputElement>) => handleUpdateMemberRole(member.email, 'isModerador', e.target.checked)}
                                   className="w-3.5 h-3.5 md:w-4 md:h-4 text-orange-500 rounded focus:ring-orange-500"
                                 />
                                 <span className={`text-[10px] md:text-sm font-semibold ${member.isModerador ? 'text-orange-500' : (darkMode ? 'text-gray-400' : 'text-gray-600')}`}>Mod</span>
