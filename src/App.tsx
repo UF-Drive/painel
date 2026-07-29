@@ -166,7 +166,8 @@ export default function App() {
 
   async function logoutGoogle() {
     await supabase.auth.signOut()
-    setisLogged(false)    
+    setisLogged(false)
+    window.location.reload()    
     // set_paginaLogin(true)
     alert("Log Out concluido!")
     console.log("A")
