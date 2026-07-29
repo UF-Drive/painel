@@ -59,40 +59,6 @@ interface Member {
 }
 // #endregion
 
-// #region --- Mock da Equipe ---
-const initialMembers = [
-  { 
-    id: 1, 
-    email: "rafael.martins@solares.com", 
-    name: "Rafael Martins", 
-    mainRole: "Engenheiro de Prova", 
-    isModerador: true, 
-    photo: "https://images.unsplash.com/photo-1535713875002-d1d0cf377fde?auto=format&fit=crop&w=150&q=80",
-    isOnline: true,
-    lastSeen: "agora"
-  },
-  { 
-    id: 2, 
-    email: "ana.clara@solares.com", 
-    name: "Ana Clara", 
-    mainRole: "Piloto", 
-    isModerador: false, 
-    photo: "https://ui-avatars.com/api/?name=Ana+Clara&background=random&color=fff",
-    isOnline: true,
-    lastSeen: "agora"
-  },
-  { 
-    id: 3, 
-    email: "lucas.silva@solares.com", 
-    name: "Lucas Silva", 
-    mainRole: "", 
-    isModerador: true, 
-    photo: "https://ui-avatars.com/api/?name=Lucas+Silva&background=random&color=fff",
-    isOnline: false,
-    lastSeen: "há 2 horas"
-  }
-];
-// #endregion
 
 // #region --- Funções Auxiliares ---
 const generatePolyline = (data: number[], width: number, height: number, maxVal: number) => {
@@ -236,7 +202,7 @@ async function verificarLogin() {
 
 
   // #region Estados - Controle de Usuário e Login
-  const [members, setMembers] = useState(initialMembers);
+  const [members, setMembers] = useState<Member[]>([]);
   const [currentUser, setCurrentUser] = useState<Member | null>(null);
   const [newMemberEmail, setNewMemberEmail] = useState('');
   const [newMemberRole, setNewMemberRole] = useState('');
@@ -351,6 +317,44 @@ async function verificarLogin() {
     }, 1000);
 
     return () => clearInterval(interval);
+  }, [currentUser]);
+
+
+
+  useEffect(() => {
+    if (!currentUser) return;
+
+    // 1. Cria um canal de comunicação para a equipe
+    const channel = supabase.channel('sala_equipe');
+
+    channel
+      .on('presence', { event: 'sync' }, () => {
+        const state = channel.presenceState();
+        
+        // 2. Extrai os e-mails de todos os usuários que estão com a tela aberta
+        const onlineEmails = new Set();
+        Object.values(state).forEach((presences: any) => {
+          presences.forEach((p: any) => onlineEmails.add(p.email));
+        });
+
+        // 3. Atualiza a interface, acendendo a bolinha verde para quem está na lista
+        setMembers(prevMembers => prevMembers.map(m => ({
+          ...m,
+          isOnline: onlineEmails.has(m.email),
+          lastSeen: onlineEmails.has(m.email) ? "agora" : (m.isOnline ? new Date().toLocaleTimeString('pt-BR', { hour: '2-digit', minute: '2-digit' }) : m.lastSeen)
+        })));
+      })
+      .subscribe(async (status) => {
+        if (status === 'SUBSCRIBED') {
+          // 4. Ao conectar, avisa ao servidor que este usuário entrou
+          await channel.track({ email: currentUser.email });
+        }
+      });
+
+    // 5. Desconecta do canal se o usuário deslogar ou fechar o site
+    return () => {
+      supabase.removeChannel(channel);
+    };
   }, [currentUser]);
   // #endregion
 
