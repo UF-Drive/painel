@@ -385,23 +385,45 @@ async function buscarEquipe() {
 
   // #region Funções de Usuário
 
-  const handleAddMember = (e: React.FormEvent) => {
+ const handleAddMember = async (e: React.FormEvent) => {
     e.preventDefault();
     if(!newMemberEmail) return;
     
-    const generatedName = generateNameFromEmail(newMemberEmail);
+    // 1. Salva o novo usuário no Supabase
+    const { data, error } = await supabase
+      .from('usuarios_autorizados')
+      .insert([
+        { 
+          email: newMemberEmail, 
+          tipo_acesso: newMemberRole, 
+          eh_moderador: newMemberIsMod 
+        }
+      ])
+      .select() // Retorna a linha criada (importante para pegar o ID gerado pelo banco)
+      .single();
+
+    if (error) {
+      alert("Erro ao adicionar membro: " + error.message);
+      return;
+    }
+
+    // 2. Atualiza a tela imediatamente usando o ID real que veio do banco
+    if (data) {
+      const generatedName = generateNameFromEmail(data.email);
+      
+      setMembers([...members, {
+        id: data.id, 
+        email: data.email,
+        name: generatedName,
+        mainRole: data.tipo_acesso || "",
+        isModerador: data.eh_moderador || false,
+        photo: `https://ui-avatars.com/api/?name=${encodeURIComponent(generatedName)}&background=random&color=fff`,
+        isOnline: false,
+        lastSeen: "nunca"
+      }]);
+    }
     
-    setMembers([...members, {
-      id: Date.now(),
-      email: newMemberEmail,
-      name: generatedName,
-      mainRole: newMemberRole,
-      isModerador: newMemberIsMod,
-      photo: `https://ui-avatars.com/api/?name=${encodeURIComponent(generatedName)}&background=random&color=fff`,
-      isOnline: false,
-      lastSeen: "nunca"
-    }]);
-    
+    // 3. Limpa os campos
     setNewMemberEmail('');
     setNewMemberRole('');
     setNewMemberIsMod(false);
