@@ -132,7 +132,7 @@ export default function App() {
   const [isLoggingIn, setIsLoggingIn] = useState(false);
 
   async function loginGoogle() {
-    const { data, error } = await supabase.auth.signInWithOAuth({
+    const { error } = await supabase.auth.signInWithOAuth({
       provider: "google",
     });
 
@@ -298,11 +298,10 @@ export default function App() {
       interval = setInterval(() => {
         setRecordingTime((prev) => prev + 1);
       }, 1000);
-    } else {
-      setRecordingTime(0);
     }
     return () => {
       if (interval) clearInterval(interval);
+      setRecordingTime(0);
     };
   }, [provaAtiva]);
 
@@ -364,7 +363,9 @@ export default function App() {
 
         // 2. Extrai os e-mails de todos os usuários que estão com a tela aberta
         const onlineEmails = new Set();
+        // eslint-disable-next-line @typescript-eslint/no-explicit-any
         Object.values(state).forEach((presences: any) => {
+          // eslint-disable-next-line @typescript-eslint/no-explicit-any
           presences.forEach((p: any) => onlineEmails.add(p.email));
         });
 
