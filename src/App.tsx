@@ -184,10 +184,15 @@ export default function App() {
 
       // 4. Aplica o usuário no sistema e libera a tela
       setCurrentUser(loggedMember);
-      setisLogged(true);
+      setShowUnlockAnim(true);
       setIsLoggingIn(false);
+      setisLogged(false);
 
       buscarEquipe();
+
+      setTimeout(() => {
+        setisLogged(true);
+      }, 2000)
     }
   }
 
@@ -231,6 +236,7 @@ export default function App() {
 
   useEffect(() => {
     verificarLogin();
+  // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   // #region Estados - Controle de Usuário e Login
@@ -551,7 +557,7 @@ export default function App() {
               </span>
               <span className="text-gray-300 mt-2 text-sm font-medium animate-pulse">
                 Seja bem-vindo,{" "}
-                {members.find((m) => m.id === 1)?.name.split(" ")[0]}!
+                {currentUser?.name.split(" ")[0]}!
               </span>
             </div>
           ) : (
