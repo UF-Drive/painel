@@ -557,7 +557,7 @@ export default function App() {
               </span>
               <span className="text-gray-300 mt-2 text-sm font-medium animate-pulse">
                 Seja bem-vindo,{" "}
-                {currentUser?.name.split(" ")[0]}!
+                {currentUser?.name ? currentUser.name.split(" ")[0] : "Equipe"}!
               </span>
             </div>
           ) : (
