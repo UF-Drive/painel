@@ -4,6 +4,8 @@ const express = require("express");
 const cors = require("cors");
 const app = express();
 
+app.use(cors());
+
 // Cria a conexão com o supabase
 const { createClient } = require("@supabase/supabase-js");
 
