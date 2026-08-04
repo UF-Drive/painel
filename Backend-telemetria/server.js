@@ -58,7 +58,7 @@ res.status(404).json({erro: 'nao encontrado'});
 
 // Rota para teste
 app.get("/", (req, res) => {
-  res.send("backend ok");
+  res.send("Te amo, sabia?");
 });
 
 
