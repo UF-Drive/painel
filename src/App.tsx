@@ -10,10 +10,7 @@ import { Menu, Moon, Sun, User, Activity, BarChart2, Zap, Settings, Database,
 // #endregion
 
 // #region --- Mock Data Inicial ---
-const initialMainData = Array.from(
-  { length: 40 },
-  () => Math.floor(Math.random() * 50) + 20,
-);
+const initialMainData = Array.from<number>({ length: 40 });
 // #endregion
 
 // #region --- Gerador de Células Iniciais para o BMS ---
