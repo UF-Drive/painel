@@ -1773,7 +1773,7 @@ export default function App() {
                       <span
                         className={`text-xl lg:text-5xl font-light tracking-tight tabular-nums ${darkMode ? "text-yellow-300" : "text-yellow-500"}`}
                       >
-                        {mainData}
+                        {currentPower}
                       </span>
                       <span
                         className={`text-xs lg:text-2xl font-medium ml-1.5 ${darkMode ? "text-yellow-300" : "text-yellow-500"}`}
