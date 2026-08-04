@@ -266,10 +266,10 @@ export default function App() {
   // const [potenciaReal, set_potenciaReal] = useState(0)
 
   const [mainData, setMainData] = useState(initialMainData);
-  const [rpm, setRpm] = useState(1450);
+  const [rpm, setRpm] = useState(0);
   const [cells, setCells] = useState(generateInitialCells(32));
-  const [speed, setSpeed] = useState(5);
-  const [battery, setBattery] = useState(100);
+  const [speed, setSpeed] = useState(0);
+  const [battery, setBattery] = useState(0);
   const [currentTime, setCurrentTime] = useState(new Date());
   // #endregion
 
