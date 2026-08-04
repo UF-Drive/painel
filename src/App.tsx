@@ -1496,7 +1496,7 @@ export default function App() {
                     </h2>
                     <span className="text-3xl font-black text-transparent bg-clip-text bg-gradient-to-r from-orange-400 to-red-500 shrink-0">
                       {mainData[mainData.length - 1].toFixed(1)}{" "}
-                      <span className="text-sm text-gray-400">kW</span>
+                      <span className="text-sm text-gray-400">W</span>
                     </span>
                   </div>
 
@@ -1539,11 +1539,11 @@ export default function App() {
                         />
                       ))}
                       <polygon
-                        points={`0,200 ${generatePolyline(mainData, 1000, 200, 100)} 1000,200`}
+                        points={`0,200 ${generatePolyline(mainData, 1000, 200, 750)} 1000,200`}
                         fill="url(#mainGradient)"
                       />
                       <polyline
-                        points={generatePolyline(mainData, 1000, 200, 100)}
+                        points={generatePolyline(mainData, 1000, 200, 750)}
                         fill="none"
                         stroke="#ea580c"
                         strokeWidth="4"
