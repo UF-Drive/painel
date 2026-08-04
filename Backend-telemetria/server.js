@@ -60,7 +60,7 @@ res.status(404).json({erro: 'nao encontrado'});
 
 // Rota para teste
 app.get("/", (req, res) => {
-  res.send("Backend minimamente funcional 👍");
+  res.send("Backend minimamente funcional 👍 (na minha máquina ta rodando)");
 });
 
 
