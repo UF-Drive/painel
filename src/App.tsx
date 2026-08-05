@@ -15,13 +15,13 @@ const initialMainData: number[] = [] // Array vazio de numeros
 // #endregion
 
 // #region --- Gerador de Células Iniciais para o BMS ---
-const generateInitialCells = (count: number) => {
-  return Array.from({ length: count }, (_, i) => ({
-    id: i + 1,
-    voltage: 3.7 + (Math.random() * 0.1 - 0.05),
-    temperature: 35 + (Math.random() * 5 - 2.5),
-  }));
-};
+// const generateInitialCells = (count: number) => {
+//   return Array.from({ length: count }, (_, i) => ({
+//     id: i + 1,
+//     voltage: 3.7 + (Math.random() * 0.1 - 0.05),
+//     temperature: 35 + (Math.random() * 5 - 2.5),
+//   }));
+// };
 // #endregion
 
 // #region --- Criando Modelo de Usuário ---
@@ -254,11 +254,6 @@ export default function App() {
     }
   }
 
-  useEffect(() => {
-    verificarLogin();
-  // eslint-disable-next-line react-hooks/exhaustive-deps
-  }, []);
-
   // #region Estados - Controle de Usuário e Login
   const [members, setMembers] = useState<Member[]>([]);
   const [currentUser, setCurrentUser] = useState<Member | null>(null);
@@ -287,13 +282,20 @@ export default function App() {
   const [battery, setBattery] = useState(0);
 
   const [rpm, setRpm] = useState(0);
-  const [cells, setCells] = useState(generateInitialCells(32));
-  const [speed, setSpeed] = useState(0);
+  const [cells, setCells] = useState(Array.from({ length:32 }, (_, i) => ({ id: i, voltage: 0 })));
+  const [speed, setSpeed] = useState(2005);
 
   const [currentTime, setCurrentTime] = useState(new Date());
   // #endregion
 
   // #region Efeitos
+
+  // Efeito para verificar o login ao carregar a pagina
+  useEffect(() => {
+    verificarLogin();
+    // eslint-disable-next-line react-hooks/exhaustive-deps
+  }, []);
+
   useEffect(() => {
     const metaThemeColor = document.querySelector('meta[name="theme-color"]');
 
@@ -335,6 +337,7 @@ export default function App() {
     };
   }, [provaAtiva]);
 
+  // Efeito usado para verificar as pessoas online no supabase
   useEffect(() => {
     if (!currentUser) return;
 
@@ -381,6 +384,25 @@ export default function App() {
       supabase.removeChannel(channel);
     };
   }, [currentUser]);
+
+    // Efeito que roda a função em loop quando o usuário está logado (Usado para buscar as medições)
+  useEffect(() => {
+    if (!currentUser) return; // Impede a busca de dados na tela de login
+
+    // Executa a função imediatamente ao logar
+    buscarUltimaMedicao();
+    buscarCelulas();
+
+    // Configura o loop para rodar a cada 2 segundos (2000 ms)
+    const interval = setInterval(() => {
+      buscarUltimaMedicao();
+      buscarCelulas();
+    }, 2000);
+
+    // Limpa o loop se o usuário deslogar ou fechar o painel
+    return () => clearInterval(interval);
+  }, [currentUser]);
+
   // #endregion
 
   // #region Funções de Usuário
@@ -499,7 +521,6 @@ export default function App() {
     : currentUser?.mainRole || "Membro";
   // #endregion
 
-
   // Função para buscar o dado
   const buscarUltimaMedicao = async () => {
     try {
@@ -522,22 +543,39 @@ export default function App() {
     }
   };
 
-  // 3. Efeito que roda a função em loop quando o usuário está logado
-  useEffect(() => {
-    if (!currentUser) return; // Impede a busca de dados na tela de login
+  const buscarCelulas = async () => {
+    try {
+      const res = await fetch("https://painel-f8r7.vercel.app/api/celulas/ultimo");
+      const data = await res.json();
 
-    // Executa a função imediatamente ao logar
-    buscarUltimaMedicao();
+      if (data && data.length > 0) {
+        const celulasBanco = data[0]; // Pega a linha completa mais recente
 
-    // Configura o loop para rodar a cada 2 segundos (2000 ms)
-    const interval = setInterval(() => {
-      buscarUltimaMedicao();
-    }, 2000);
+        // Puxar a coluna de array do supabase
+        const tensoes = celulasBanco.celula; 
+        
+        // Vamos usar essa mesma coisa para puxar a temperatura depois...
+        const temperaturas = celulasBanco.temperaturas;
 
-    // Limpa o loop se o usuário deslogar ou fechar o painel
-    return () => clearInterval(interval);
-  }, [currentUser]);
+        // 2. Transforma o array simples de floats no formato de objetos que a tela exige
+        if (tensoes && Array.isArray(tensoes)) {
+          const novasCelulas = tensoes.map((valorTensao: number, index: number) => ({
+            id: index + 1, // O índice começa em 0, então somamos 1 para a Célula 1, Célula 2...
+            voltage: valorTensao,
+            
+            // Se tiver a coluna de temperaturas, puxa a temperatura na mesma posição. 
+            // Se não tiver, coloca um valor padrão (ex: 35).
+            temperature: temperaturas && temperaturas[index] ? temperaturas[index] : 35
+          }));
 
+          // 3. Atualiza os estados na tela, acionando as barras e as cores instantaneamente
+          setCells(novasCelulas);
+        }
+      }
+    } catch (error) {
+      console.error("Erro ao buscar células:", error);
+    }
+  };
 
 
 
