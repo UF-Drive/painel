@@ -525,7 +525,7 @@ export default function App() {
   const buscarUltimaMedicao = async () => {
     try {
       // Substitua pela URL real gerada pela Vercel para o seu backend
-      const res = await fetch("/ultimo");
+      const res = await fetch("https://painel-f8r7.vercel.app/sensores/ultimo");
       const data = await res.json();
 
       if (data && data.length > 0) {
