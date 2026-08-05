@@ -10,7 +10,8 @@ import { Menu, Moon, Sun, User, Activity, BarChart2, Zap, Settings, Database,
 // #endregion
 
 // #region --- Mock Data Inicial ---
-const initialMainData = Array.from<number>({ length: 40 });
+const initialMainData: number[] = [] // Array vazio de numeros
+// const initialMainData = Array.from<number>({ length: 40 }).fill(0);
 // #endregion
 
 // #region --- Gerador de Células Iniciais para o BMS ---
@@ -37,21 +38,42 @@ interface Member {
 // #endregion
 
 // #region --- Funções Auxiliares ---
-const generatePolyline = (
-  data: number[],
-  width: number,
-  height: number,
-  maxVal: number,
-) => {
-  const stepX = width / (data.length - 1);
-  return data
+
+const generatePolyline = (data: number[], width: number, height: number, maxVal: number) => {
+  if (data.length === 0) return "";
+  
+  const stepX = width / 39; // Trava a distância para 40 pontos máximos
+  
+  // Inverte para desenhar do mais antigo (esquerda) para o mais novo (direita)
+  const reversedData = [...data].reverse(); 
+  
+  // Calcula o offset para empurrar o ponto mais novo para o final (x = 1000)
+  const offsetX = width - ((reversedData.length - 1) * stepX);
+  
+  return reversedData
     .map((val: number, index: number) => {
-      const x = index * stepX;
+      const x = offsetX + (index * stepX);
       const y = height - (val / maxVal) * height;
       return `${x},${y}`;
     })
     .join(" ");
 };
+
+// const generatePolyline = (
+//   data: number[],
+//   width: number,
+//   height: number,
+//   maxVal: number,
+// ) => {
+//   const stepX = width / (data.length - 1);
+//   return data
+//     .map((val: number, index: number) => {
+//       const x = index * stepX;
+//       const y = height - (val / maxVal) * height;
+//       return `${x},${y}`;
+//     })
+//     .join(" ");
+// };
 
 const generateNameFromEmail = (email: string) => {
   const prefix = email.split("@")[0];
@@ -463,7 +485,7 @@ export default function App() {
     timeZone: "America/Sao_Paulo",
   });
 
-  const currentPower = mainData[mainData.length - 1] || 1;
+  const currentPower = mainData[0] || 404;
   const estimatedTimeRaw = (battery / Math.max(10, currentPower)) * 2.5;
   const estHours = Math.floor(estimatedTimeRaw);
   const estMinutes = Math.floor((estimatedTimeRaw - estHours) * 60);
@@ -491,7 +513,8 @@ export default function App() {
         // 2. Atualiza as variáveis da tela com os dados reais
         if (medicao.tensao != null) set_tensaoReal(medicao.tensao);
         if (medicao.corrente != null) set_correnteRealBateria(medicao.corrente);
-        if (medicao.potencia != null) setMainData(prev => [...prev.slice(1), medicao.potencia]);
+        if (medicao.potencia != null) setMainData(prev => [medicao.potencia, ...prev]);
+        // if (medicao.potencia != null) setMainData(prev => [...prev.slice(1), medicao.potencia]);
         if (medicao.porcentagem != null) setBattery(medicao.porcentagem);
       }
     } catch (error) {
@@ -1491,7 +1514,21 @@ export default function App() {
                           strokeDasharray="5,5"
                         />
                       ))}
-                      <polygon
+                        <polygon
+                          // Calcula o "chão" dinâmico para fechar a sombra reta na base
+                          points={`${mainData.length > 0 ? 1000 - ((mainData.length - 1) * (1000 / 39)) : 1000},200 ${generatePolyline(mainData, 1000, 200, 1500)} 1000,200`}
+                          fill="url(#mainGradient)"
+                        />
+                        <polyline
+                          points={generatePolyline(mainData, 1000, 200, 1500)}
+                          fill="none"
+                          stroke="#ea580c"
+                          strokeWidth="4"
+                          strokeLinecap="round"
+                          strokeLinejoin="round"
+                          className="drop-shadow-md"
+                        />
+                      {/* <polygon
                         points={`0,200 ${generatePolyline(mainData, 1000, 200, 750)} 1000,200`}
                         fill="url(#mainGradient)"
                       />
@@ -1503,7 +1540,7 @@ export default function App() {
                         strokeLinecap="round"
                         strokeLinejoin="round"
                         className="drop-shadow-md"
-                      />
+                      /> */}
                       <line
                         x1="0"
                         y1="200"
