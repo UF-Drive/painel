@@ -259,15 +259,15 @@ export default function App() {
   // #endregion
 
   // #region Estados - Dados de Telemetria
+  const [mainData, setMainData] = useState(initialMainData);
   const [tensaoReal, set_tensaoReal] = useState(0)
   const [correnteRealBateria, set_correnteRealBateria] = useState(0)
-  // const [potenciaReal, set_potenciaReal] = useState(0)
+  const [battery, setBattery] = useState(0);
 
-  const [mainData, setMainData] = useState(initialMainData);
   const [rpm, setRpm] = useState(0);
   const [cells, setCells] = useState(generateInitialCells(32));
   const [speed, setSpeed] = useState(0);
-  const [battery, setBattery] = useState(0);
+
   const [currentTime, setCurrentTime] = useState(new Date());
   // #endregion
 
@@ -312,52 +312,6 @@ export default function App() {
       setRecordingTime(0);
     };
   }, [provaAtiva]);
-
-  // useEffect(() => {
-  //   if (!currentUser) return;
-
-  //   const interval = setInterval(() => {
-  //     setMainData((prev) => {
-  //       const newData = [...prev.slice(1)];
-  //       const lastVal = prev[prev.length - 1];
-  //       newData.push(
-  //         Math.max(10, Math.min(90, lastVal + (Math.random() * 10 - 5))),
-  //       );
-  //       return newData;
-  //     });
-
-  //     setRpm((prev) => Math.floor(prev + (Math.random() * 50 - 25)));
-
-  //     setSpeed((prev) => {
-  //       const variation = prev + (Math.random() * 2 - 1);
-  //       const nextSpeed = Math.round(variation);
-  //       if (nextSpeed > 10) return 9;
-  //       if (nextSpeed < 0) return 1;
-  //       return nextSpeed;
-  //     });
-
-  //     setBattery((prev) => {
-  //       if (prev <= 0) return 100;
-  //       return prev - 1;
-  //     });
-
-  //     setCells((prev) =>
-  //       prev.map((cell) => ({
-  //         ...cell,
-  //         voltage: Math.max(
-  //           3.0,
-  //           Math.min(4.2, cell.voltage + (Math.random() * 0.04 - 0.02)),
-  //         ),
-  //         temperature: Math.max(
-  //           20,
-  //           Math.min(60, cell.temperature + (Math.random() * 0.6 - 0.3)),
-  //         ),
-  //       })),
-  //     );
-  //   }, 1000);
-
-  //   return () => clearInterval(interval);
-  // }, [currentUser]);
 
   useEffect(() => {
     if (!currentUser) return;
@@ -524,7 +478,7 @@ export default function App() {
   // #endregion
 
 
-  // 1. Função assíncrona para buscar o dado
+  // Função para buscar o dado
   const buscarUltimaMedicao = async () => {
     try {
       // Substitua pela URL real gerada pela Vercel para o seu backend
@@ -538,6 +492,7 @@ export default function App() {
         if (medicao.tensao != null) set_tensaoReal(medicao.tensao);
         if (medicao.corrente != null) set_correnteRealBateria(medicao.corrente);
         if (medicao.potencia != null) setMainData(prev => [...prev.slice(1), medicao.potencia]);
+        if (medicao.porcentagem != null) setBattery(medicao.porcentagem);
       }
     } catch (error) {
       console.error("Erro na comunicação com o backend:", error);
