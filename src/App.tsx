@@ -9,20 +9,7 @@ import { Menu, Moon, Sun, User, Activity, BarChart2, Zap, Settings, Database,
   Play, Square,} from "lucide-react";
 // #endregion
 
-// #region --- Mock Data Inicial ---
-const initialMainData: number[] = [] // Array vazio de numeros
-// const initialMainData = Array.from<number>({ length: 40 }).fill(0);
-// #endregion
 
-// #region --- Gerador de Células Iniciais para o BMS ---
-// const generateInitialCells = (count: number) => {
-//   return Array.from({ length: count }, (_, i) => ({
-//     id: i + 1,
-//     voltage: 3.7 + (Math.random() * 0.1 - 0.05),
-//     temperature: 35 + (Math.random() * 5 - 2.5),
-//   }));
-// };
-// #endregion
 
 // #region --- Criando Modelo de Usuário ---
 interface Member {
@@ -58,22 +45,6 @@ const generatePolyline = (data: number[], width: number, height: number, maxVal:
     })
     .join(" ");
 };
-
-// const generatePolyline = (
-//   data: number[],
-//   width: number,
-//   height: number,
-//   maxVal: number,
-// ) => {
-//   const stepX = width / (data.length - 1);
-//   return data
-//     .map((val: number, index: number) => {
-//       const x = index * stepX;
-//       const y = height - (val / maxVal) * height;
-//       return `${x},${y}`;
-//     })
-//     .join(" ");
-// };
 
 const generateNameFromEmail = (email: string) => {
   const prefix = email.split("@")[0];
@@ -276,16 +247,16 @@ export default function App() {
   // #endregion
 
   // #region Estados - Dados de Telemetria
-  const [mainData, setMainData] = useState(initialMainData);
-  const [tensaoReal, set_tensaoReal] = useState(0)
-  const [correnteRealBateria, set_correnteRealBateria] = useState(0)
-  const [battery, setBattery] = useState(0);
+  const initialMainData: number[] = []                                // Array vazio de numeros
+  const [mainData, setMainData] = useState(initialMainData);          // Valores para a construção do grafico   
+  const [tensaoReal, set_tensaoReal] = useState(0)                    // Tensao total da bateria
+  const [correnteRealBateria, set_correnteRealBateria] = useState(0)  // Corrente da bateria
+  const [battery, setBattery] = useState(0);                          // Porcentagem da bateria
+  const [cells, setCells] = useState(Array.from({ length:32 }, (_, i) => ({ id: i, voltage: 0, temperature: 50 })));
+  const [currentTime, setCurrentTime] = useState(new Date());         // Horário atual
 
   const [rpm, setRpm] = useState(0);
-  const [cells, setCells] = useState(Array.from({ length:32 }, (_, i) => ({ id: i, voltage: 0, temperature: 50 })));
   const [speed, setSpeed] = useState(2005);
-
-  const [currentTime, setCurrentTime] = useState(new Date());
   // #endregion
 
   // #region Efeitos
@@ -296,6 +267,7 @@ export default function App() {
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
+  // Efeito para controlar o modo escuro
   useEffect(() => {
     const metaThemeColor = document.querySelector('meta[name="theme-color"]');
 
@@ -406,6 +378,8 @@ export default function App() {
   // #endregion
 
   // #region Funções de Usuário
+
+  // Função para a adição de membros usando a pagina
   const handleAddMember = async (e: React.FormEvent) => {
     e.preventDefault();
     if (!newMemberEmail) return;
@@ -453,6 +427,7 @@ export default function App() {
     setNewMemberIsMod(false);
   };
 
+  // Função para remoção de membros usando a pagina
   const handleRemoveMember = async (email: string) => {
     const { error } = await supabase
       .from("usuarios_autorizados")
@@ -467,6 +442,7 @@ export default function App() {
     setMembers(members.filter((m) => m.email !== email));
   };
 
+  // Função para a alteração do "tipo" de membro usando a pagina
   const handleUpdateMemberRole = async (
     email: string,
     field: keyof Member,
@@ -495,7 +471,6 @@ export default function App() {
   // #endregion
 
   // #region Cálculos Derivados
-  const totalBmsVoltage = cells.reduce((acc, cell) => acc + cell.voltage, 0);
   const avgBmsTemp =
     cells.reduce((acc, cell) => acc + cell.temperature, 0) / cells.length;
   const maxVoltageCell = [...cells].sort((a, b) => b.voltage - a.voltage)[0];
@@ -512,7 +487,7 @@ export default function App() {
   const estHours = Math.floor(estimatedTimeRaw);
   const estMinutes = Math.floor((estimatedTimeRaw - estHours) * 60);
 
-  const correnteMotor = ((currentPower * 1000) / totalBmsVoltage).toFixed(1);
+  const correnteMotor = ((currentPower * 1000) / tensaoReal).toFixed(1);
 
   const userProfileSubtitle = currentUser?.isModerador
     ? currentUser.mainRole
@@ -576,14 +551,6 @@ export default function App() {
       console.error("Erro ao buscar células:", error);
     }
   };
-
-
-
-
-
-
-
-
 
   // #region Renderização: Tela de Login
   if (!isLogged) {
