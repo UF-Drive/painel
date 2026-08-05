@@ -1979,7 +1979,7 @@ export default function App() {
                       className={`text-sm mb-6 ${darkMode ? "text-gray-400" : "text-gray-500"}`}
                     >
                       Calculado dinamicamente relacionando o nível de carga com
-                      o consumo (kW) atual.
+                      o consumo (W) atual.
                     </p>
 
                     <div className="flex flex-wrap justify-center md:justify-start gap-4">
@@ -1990,7 +1990,7 @@ export default function App() {
                           Consumo
                         </p>
                         <p className="text-xl font-bold text-orange-500 tabular-nums">
-                          {currentPower.toFixed(1)} kW
+                          {currentPower.toFixed(1)} W
                         </p>
                       </div>
                       <div
