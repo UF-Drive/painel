@@ -40,7 +40,7 @@ interface Member {
 // #region --- Funções Auxiliares ---
 
 const generatePolyline = (data: number[], width: number, height: number, maxVal: number) => {
-  if (data.length === 0) return "";
+  if (data.length === 0) return "1000,200";
   
   const stepX = width / 39; // Trava a distância para 40 pontos máximos
   
@@ -513,7 +513,7 @@ export default function App() {
         // 2. Atualiza as variáveis da tela com os dados reais
         if (medicao.tensao != null) set_tensaoReal(medicao.tensao);
         if (medicao.corrente != null) set_correnteRealBateria(medicao.corrente);
-        if (medicao.potencia != null) setMainData(prev => [medicao.potencia, ...prev]);
+        if (medicao.potencia != null) setMainData(prev => [medicao.potencia, ...prev].slice(0,40));
         // if (medicao.potencia != null) setMainData(prev => [...prev.slice(1), medicao.potencia]);
         if (medicao.porcentagem != null) setBattery(medicao.porcentagem);
       }
@@ -1471,7 +1471,7 @@ export default function App() {
                       Desempenho Principal
                     </h2>
                     <span className="text-3xl font-black text-transparent bg-clip-text bg-gradient-to-r from-orange-400 to-red-500 shrink-0">
-                      {mainData[mainData.length - 1].toFixed(1)}{" "}
+                      {currentPower.toFixed(1)}{" "}
                       <span className="text-sm text-gray-400">W</span>
                     </span>
                   </div>
