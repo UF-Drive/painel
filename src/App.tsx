@@ -1066,7 +1066,7 @@ export default function App() {
                   </h3>
                   <div className="flex items-baseline">
                     <span className="text-sm sm:text-4xl font-black text-blue-500 tabular-nums">
-                      {totalBmsVoltage.toFixed(1)}
+                      {tensaoReal}
                     </span>
                     <span className="text-[10px] sm:text-xl font-bold ml-0.5 md:ml-1 text-blue-500">
                       V
@@ -1541,7 +1541,7 @@ export default function App() {
                           Tensão Pack
                         </span>
                         <span className="font-bold text-blue-500 text-xs md:text-base tabular-nums">
-                          {totalBmsVoltage.toFixed(1)} V
+                          {tensaoReal} V
                         </span>
                       </div>
                       <div
