@@ -282,7 +282,7 @@ export default function App() {
   const [battery, setBattery] = useState(0);
 
   const [rpm, setRpm] = useState(0);
-  const [cells, setCells] = useState(Array.from({ length:32 }, (_, i) => ({ id: i, voltage: 0 })));
+  const [cells, setCells] = useState(Array.from({ length:32 }, (_, i) => ({ id: i, voltage: 0, temperature: 50 })));
   const [speed, setSpeed] = useState(2005);
 
   const [currentTime, setCurrentTime] = useState(new Date());
