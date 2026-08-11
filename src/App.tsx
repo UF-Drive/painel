@@ -252,7 +252,7 @@ export default function App() {
   const [tensaoReal, set_tensaoReal] = useState(0)                    // Tensao total da bateria
   const [correnteRealBateria, set_correnteRealBateria] = useState(0)  // Corrente da bateria
   const [battery, setBattery] = useState(0);                          // Porcentagem da bateria
-  const [cells, setCells] = useState(Array.from({ length:32 }, (_, i) => ({ id: i, voltage: 0, temperature: 50 })));
+  const [cells, setCells] = useState(Array.from({ length:16 }, (_, i) => ({ id: i, voltage: 0, temperature: 50 })));
   const [currentTime, setCurrentTime] = useState(new Date());         // Horário atual
 
   const [rpm, setRpm] = useState(0);
