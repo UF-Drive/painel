@@ -229,8 +229,8 @@ app.get("/api/celulas/ultimo", async (req, res) => {
   const { data, error } = await supabase
     .from("celulas")
     .select("*")
-    .order("id", { ascending: false })
-    .limit(1);
+    // .order("id", { ascending: false })
+    // .limit(1);
 
   console.log("DATA:", data);
   console.log("ERROR:", error);
