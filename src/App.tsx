@@ -524,15 +524,10 @@ export default function App() {
       const res = await fetch("https://painel-f8r7.vercel.app/api/celulas/ultimo");
       const data = await res.json();
 
+      console.log("Resposta completa:", data);
+
       if (data && data.length > 0) {
         const celulasBanco = data[0]; // Pega a linha completa mais recente
-
-
-        console.log("Resposta completa:", data);
-        console.log("Células:", celulasBanco.celula);
-        console.log("Temperaturas:", celulasBanco.temperaturas);
-
-
 
         // Puxar a coluna de array do supabase
         const tensoes = celulasBanco.celula; 
