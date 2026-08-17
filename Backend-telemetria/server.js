@@ -220,6 +220,7 @@ app.get("/api/celulas/ultimo", async(req, res) => {
   if (error) return res.status(500).json({erro: error.message});
 
   res.json(data);
+  res.send(data)
 });
 
 // Para fazer o vercel funcionar
