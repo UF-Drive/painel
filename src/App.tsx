@@ -255,8 +255,7 @@ export default function App() {
   const [cells, setCells] = useState(Array.from({ length:16 }, (_, i) => ({ id: i, voltage: 0, temperature: 50 })));
   const [currentTime, setCurrentTime] = useState(new Date());         // Horário atual
   const [rpm, setRpm] = useState(0);
-
-  const [speed, setSpeed] = useState(2005);
+  const [speed, setSpeed] = useState(0);
   // #endregion
 
   // #region Efeitos
