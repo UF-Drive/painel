@@ -357,7 +357,7 @@ export default function App() {
     };
   }, [currentUser]);
 
-    // Efeito que roda a função em loop quando o usuário está logado (Usado para buscar as medições)
+  // Efeito que roda a função em loop quando o usuário está logado (Usado para buscar as medições)
   useEffect(() => {
     if (!currentUser) return; // Impede a busca de dados na tela de login
 
@@ -482,7 +482,7 @@ export default function App() {
     timeZone: "America/Sao_Paulo",
   });
 
-  const currentPower = mainData[0] || 404;
+  const currentPower = mainData[0];
   const estimatedTimeRaw = (battery / Math.max(10, currentPower)) * 2.5;
   const estHours = Math.floor(estimatedTimeRaw);
   const estMinutes = Math.floor((estimatedTimeRaw - estHours) * 60);
