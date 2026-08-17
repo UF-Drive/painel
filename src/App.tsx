@@ -486,7 +486,7 @@ export default function App() {
   const estHours = Math.floor(estimatedTimeRaw);
   const estMinutes = Math.floor((estimatedTimeRaw - estHours) * 60);
 
-  const correnteMotor = ((currentPower * 1000) / tensaoReal).toFixed(1);
+  const correnteMotor = 'algo'; //((currentPower * 1000) / tensaoReal).toFixed(1);
 
   const userProfileSubtitle = currentUser?.isModerador
     ? currentUser.mainRole
