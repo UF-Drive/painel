@@ -209,40 +209,40 @@ app.get("/api/celulas", async(req, res) => {
 });
 
 // // Rota para a coleta do ultimo dado das medicoes individuais das celulas
-// app.get("/api/celulas/ultimo", async(req, res) => {
+app.get("/api/celulas/ultimo", async(req, res) => {
   
-//   const { data, error } = await supabase
-//     .from("celulas")
-//     .select("*")
-//     .order("id", {ascending: false})
-//     .limit(1);
-
-//   if (error) return res.status(500).json({erro: error.message});
-
-//   res.json(data);
-// });
-
-app.get("/api/celulas/ultimo", async (req, res) => {
-
-  console.log("Consultando tabela celulas...");
-
   const { data, error } = await supabase
     .from("celulas")
     .select("*")
-    // .order("id", { ascending: false })
-    // .limit(1);
+    .order("id", {ascending: false})
+    .limit(1);
 
-  console.log("DATA:", data);
-  console.log("ERROR:", error);
-
-  if (error) {
-    return res.status(500).json({
-      erro: error.message
-    });
-  }
+  if (error) return res.status(500).json({erro: error.message});
 
   res.json(data);
 });
+
+// app.get("/api/celulas/ultimo", async (req, res) => {
+
+//   console.log("Consultando tabela celulas...");
+
+//   const { data, error } = await supabase
+//     .from("celulas")
+//     .select("*")
+//     // .order("id", { ascending: false })
+//     // .limit(1);
+
+//   console.log("DATA:", data);
+//   console.log("ERROR:", error);
+
+//   if (error) {
+//     return res.status(500).json({
+//       erro: error.message
+//     });
+//   }
+
+//   res.json(data);
+// });
 
 // Para fazer o vercel funcionar
 module.exports = app
