@@ -222,27 +222,5 @@ app.get("/api/celulas/ultimo", async(req, res) => {
   res.json(data);
 });
 
-// app.get("/api/celulas/ultimo", async (req, res) => {
-
-//   console.log("Consultando tabela celulas...");
-
-//   const { data, error } = await supabase
-//     .from("celulas")
-//     .select("*")
-//     // .order("id", { ascending: false })
-//     // .limit(1);
-
-//   console.log("DATA:", data);
-//   console.log("ERROR:", error);
-
-//   if (error) {
-//     return res.status(500).json({
-//       erro: error.message
-//     });
-//   }
-
-//   res.json(data);
-// });
-
 // Para fazer o vercel funcionar
 module.exports = app
