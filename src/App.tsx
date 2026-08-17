@@ -254,8 +254,8 @@ export default function App() {
   const [battery, setBattery] = useState(0);                          // Porcentagem da bateria
   const [cells, setCells] = useState(Array.from({ length:16 }, (_, i) => ({ id: i, voltage: 0, temperature: 50 })));
   const [currentTime, setCurrentTime] = useState(new Date());         // Horário atual
-
   const [rpm, setRpm] = useState(0);
+
   const [speed, setSpeed] = useState(2005);
   // #endregion
 
@@ -512,6 +512,8 @@ export default function App() {
         if (medicao.potencia != null) setMainData(prev => [medicao.potencia, ...prev].slice(0,40));
         // if (medicao.potencia != null) setMainData(prev => [...prev.slice(1), medicao.potencia]);
         if (medicao.porcentagem != null) setBattery(medicao.porcentagem);
+        if (medicao.rpm != null) setRpm(medicao.rpm);
+        if (medicao.velocidade != null) setSpeed(medicao.velocidade);
       }
     } catch (error) {
       console.error("Erro na comunicação com o backend:", error);
