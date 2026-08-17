@@ -1611,7 +1611,7 @@ export default function App() {
                         <span
                           className={`font-bold text-xs md:text-base tabular-nums ${voltageImbalance > 0.15 ? "text-red-500" : "text-green-500"}`}
                         >
-                          Δ {voltageImbalance.toFixed(3)} V
+                          Δ {voltageImbalance.toFixed(2)} V
                         </span>
                       </div>
                       <div
