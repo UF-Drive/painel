@@ -533,7 +533,7 @@ export default function App() {
         const tensoes = celulasBanco.celula; 
         
         // Vamos usar essa mesma coisa para puxar a temperatura depois...
-        const temperaturas = celulasBanco.temperaturas;
+        const temperaturas = celulasBanco.temperatura;
 
         // 2. Transforma o array simples de floats no formato de objetos que a tela exige
         if (tensoes && Array.isArray(tensoes)) {
