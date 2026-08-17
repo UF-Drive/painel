@@ -541,7 +541,7 @@ export default function App() {
             
             // Se tiver a coluna de temperaturas, puxa a temperatura na mesma posição. 
             // Se não tiver, coloca um valor padrão (ex: 35).
-            temperature: temperaturas && temperaturas[index] ? temperaturas[index] : 35
+            temperature: temperaturas && temperaturas[index] !== undefined ? temperaturas[index] : -1
           }));
 
           // 3. Atualiza os estados na tela, acionando as barras e as cores instantaneamente
