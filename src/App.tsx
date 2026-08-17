@@ -1115,7 +1115,7 @@ export default function App() {
                     <span
                       className={`text-sm sm:text-4xl font-black tabular-nums ${voltageImbalance > 0.15 ? "text-red-500" : "text-green-500"}`}
                     >
-                      {voltageImbalance.toFixed(3)}
+                      {voltageImbalance.toFixed(2)}
                     </span>
                     <span
                       className={`text-[10px] sm:text-xl font-bold ml-0.5 md:ml-1 ${voltageImbalance > 0.15 ? "text-red-500" : "text-green-500"}`}
