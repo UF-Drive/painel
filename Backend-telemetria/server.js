@@ -112,7 +112,7 @@ app.post("/api/celulas", async (req, res) => {
     const dados = req.body; 
 
     // Verifica se a chave "cells" existe e se tem 32 valores
-    if (!dados.cells || dados.cells.length !== 32) {
+    if (!dados.cells || dados.cells.length !== 16) {
         return res.status(400).json({ erro: "Pacote incompleto ou inválido!" });
     }
 
@@ -158,7 +158,7 @@ app.get("/api/sensores/ultimo", async (req, res) => {
   const { data, error } = await supabase
     .from("medicoes")
     .select("*")
-    .order("id", {ascending: false})
+    .order("id", {ascending:false})
     .limit(1);
 
   if (error) {
