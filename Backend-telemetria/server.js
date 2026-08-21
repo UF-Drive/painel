@@ -111,7 +111,7 @@ app.post("/api/celulas", async (req, res) => {
     // req.body receberá { "tensoes": [3.21, 5.49, 1.92, ...] }
     const dados = req.body; 
 
-    // Verifica se a chave "cells" existe e se tem 32 valores
+    // Verifica se a chave "cells" existe e se tem 16 valores
     if (!dados.cells || dados.cells.length !== 16) {
         return res.status(400).json({ erro: "Pacote incompleto ou inválido!" });
     }
@@ -126,7 +126,7 @@ app.post("/api/celulas", async (req, res) => {
 
     // Insere o array inteiro de uma só vez em uma única linha no Supabase
     const { error } = await supabase.from("celulas").insert({
-        valores_das_celulas: dados.cells // Associa o array do JS à coluna do banco
+        celula: dados.cells // Associa o array do JS à coluna do banco
     });
 
     if (error) {
