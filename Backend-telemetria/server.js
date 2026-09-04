@@ -118,7 +118,7 @@ app.post("/api/celulas", async (req, res) => {
 
     // Valida se algum valor dentro do array é nulo ou indefinido
     for (let i = 0; i < dados.cells.length; i++) {
-        if (dados.cells[i] === undefined || dados.cells[i] === null) {
+        if (dados.cells[i] === undefined) { //|| dados.cells[i] === null
             console.log(`Erro célula: ${i + 1}`);
             return res.status(400).json({ erro: `élula ${i + 1} incompleta!` });
         }
