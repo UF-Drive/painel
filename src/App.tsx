@@ -1206,12 +1206,12 @@ export default function App() {
                           ></div>
                         </div>
 
-                        <div
+                        {/* <div
                           className={`flex items-center text-[8px] md:text-xs font-bold tabular-nums ${isHighTemp ? "text-red-500" : "text-orange-400"}`}
                         >
                           <Thermometer className="w-2 h-2 md:w-3.5 md:h-3.5 mr-0.5 md:mr-1" />
                           {cell.temperature.toFixed(1)}°C
-                        </div>
+                        </div> */}
                       </div>
                     );
                   })}
