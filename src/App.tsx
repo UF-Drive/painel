@@ -251,6 +251,7 @@ export default function App() {
   const [mainData, setMainData] = useState(initialMainData);          // Valores para a construção do grafico   
   const [tensaoReal, set_tensaoReal] = useState(0)                    // Tensao total da bateria
   const [correnteRealBateria, set_correnteRealBateria] = useState(0)  // Corrente da bateria
+  const [correnteMotor, set_correnteMotor] = useState(-1)
   const [battery, setBattery] = useState(0);                          // Porcentagem da bateria
   const [cells, setCells] = useState(Array.from({ length:16 }, (_, i) => ({ id: i, voltage: 0, temperature: 0 })));  // Parte das celulas
   const [currentTime, setCurrentTime] = useState(new Date());         // Horário atual
@@ -486,8 +487,6 @@ export default function App() {
   const estHours = Math.floor(estimatedTimeRaw);
   const estMinutes = Math.floor((estimatedTimeRaw - estHours) * 60);
 
-  const correnteMotor = 'algo'; //((currentPower * 1000) / tensaoReal).toFixed(1);
-
   const userProfileSubtitle = currentUser?.isModerador
     ? currentUser.mainRole
       ? `${currentUser.mainRole} | Mod`
@@ -509,6 +508,7 @@ export default function App() {
         if (medicao.tensao != null) set_tensaoReal(medicao.tensao);
         if (medicao.corrente != null) set_correnteRealBateria(medicao.corrente);
         if (medicao.potencia != null) setMainData(prev => [medicao.potencia, ...prev].slice(0,40));
+        if (medicao.corrente_2 != null) set_correnteMotor(medicao.corrente_2);
         // if (medicao.potencia != null) setMainData(prev => [...prev.slice(1), medicao.potencia]);
         if (medicao.porcentagem != null) setBattery(medicao.porcentagem);
         if (medicao.rpm != null) setRpm(medicao.rpm);
