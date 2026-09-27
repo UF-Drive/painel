@@ -1473,6 +1473,7 @@ export default function App() {
               </div>
               {/* #endregion */}
             </div>
+            
           ) : activeTab === "Resumo" ? (
             <div className="flex flex-col h-full w-full gap-2 md:gap-4 min-h-0 animate-in fade-in duration-300">
               <div className="flex gap-2 md:gap-6 flex-col md:flex-row shrink-0 w-full">
@@ -1509,19 +1510,45 @@ export default function App() {
                         </linearGradient>
                       </defs>
 
-                      {/* Linhas de grelha secundárias */}
-                      {[50, 150].map((y) => (
-                        <line
-                          key={`grid-${y}`}
-                          x1="0"
-                          y1={y}
-                          x2="1000"
-                          y2={y}
-                          stroke={darkMode ? "#374151" : "#f3f4f6"}
-                          strokeWidth="1"
-                          strokeDasharray="5,5"
-                        />
-                      ))}
+                      {/* Linhas de grade de 1000 em 1000 W 
+                          Escala: +5000W é y=0, 0W é y=100, -5000W é y=200
+                          Portanto, cada 1000W equivale a 20 pixels de altura:
+                          +4000W -> y = 20
+                          +3000W -> y = 40
+                          +2000W -> y = 60
+                          +1000W -> y = 80
+                          0W     -> y = 100 (Linha Central Principal)
+                          -1000W -> y = 120
+                          -2000W -> y = 140
+                          -3000W -> y = 160
+                          -4000W -> y = 180
+                      */}
+                      {[20, 40, 60, 80, 120, 140, 160, 180].map((y) => {
+                        // Calcula o valor em Watts correspondente a esta linha
+                        const valW = (100 - y) * 50; 
+                        return (
+                          <g key={`grid-group-${y}`}>
+                            <line
+                              x1="0"
+                              y1={y}
+                              x2="1000"
+                              y2={y}
+                              stroke={darkMode ? "#374151" : "#f3f4f6"}
+                              strokeWidth="1"
+                              strokeDasharray="4,4"
+                            />
+                            <text 
+                              x="15" 
+                              y={y - 4} 
+                              fill={darkMode ? "#9ca3af" : "#9ca3af"} 
+                              fontSize="10" 
+                              fontWeight="600"
+                            >
+                              {valW > 0 ? `+${valW}W` : `${valW}W`}
+                            </text>
+                          </g>
+                        );
+                      })}
 
                       {/* LINHA DE ZERO DESTACADA (Exatamente no y = 100) */}
                       <line
@@ -1533,7 +1560,7 @@ export default function App() {
                         strokeWidth="2"
                         strokeDasharray="4,4"
                       />
-                      <text x="10" y="93" fill={darkMode ? "#9ca3af" : "#6b7280"} fontSize="12" fontWeight="bold">0 W</text>
+                      <text x="15" y="94" fill={darkMode ? "#ef4444" : "#f97316"} fontSize="11" fontWeight="bold">0 W</text>
 
                       {/* Sombra e Polinésia do Gráfico */}
                       <polygon
@@ -1550,7 +1577,7 @@ export default function App() {
                         className="drop-shadow-md"
                       />
 
-                      {/* Pontos interativos invisíveis para o Hover (Tooltip nativo do SVG) */}
+                      {/* Micropontos visíveis e interativos em cada medição */}
                       {[...mainData].reverse().map((val, index) => {
                         const stepX = 1000 / 39;
                         const offsetX = 1000 - ((mainData.length - 1) * stepX);
@@ -1558,16 +1585,27 @@ export default function App() {
                         const y = 100 - (val / 5000) * 100;
 
                         return (
-                          <circle
-                            key={`point-${index}`}
-                            cx={x}
-                            cy={y}
-                            r="8"
-                            fill="transparent"
-                            className="cursor-pointer"
-                          >
-                            <title>{`Potência: ${val.toFixed(1)} W`}</title>
-                          </circle>
+                          <g key={`point-group-${index}`}>
+                            {/* Microponto visível na linha */}
+                            <circle
+                              cx={x}
+                              cy={y}
+                              r="3.5"
+                              fill="#ea580c"
+                              stroke="#ffffff"
+                              strokeWidth="1.5"
+                            />
+                            {/* Área invisível maior para facilitar o hover com o rato */}
+                            <circle
+                              cx={x}
+                              cy={y}
+                              r="10"
+                              fill="transparent"
+                              className="cursor-pointer"
+                            >
+                              <title>{`Potência: ${val.toFixed(1)} W`}</title>
+                            </circle>
+                          </g>
                         );
                       })}
                     </svg>
@@ -1659,8 +1697,9 @@ export default function App() {
                 </div>
               </div>
 
+              {/* Bloco inferior de Métricas do Sistema com altura flexível ajustada para evitar cortes */}
               <div
-                className={`flex-1 rounded-2xl shadow-sm overflow-hidden transition-colors duration-300 w-full flex flex-col min-h-0 ${darkMode ? "bg-gray-800 border border-gray-700" : "bg-white border border-gray-300 shadow-xl shadow-gray-200/50"}`}
+                className={`rounded-2xl shadow-sm overflow-hidden transition-colors duration-300 w-full flex flex-col ${darkMode ? "bg-gray-800 border border-gray-700" : "bg-white border border-gray-300 shadow-xl shadow-gray-200/50"}`}
               >
                 <div
                   className={`hidden md:block p-3 border-b shrink-0 ${darkMode ? "border-gray-700 bg-gray-800" : "border-gray-300 bg-gray-50"}`}
@@ -1669,10 +1708,10 @@ export default function App() {
                 </div>
 
                 <div
-                  className={`flex-1 grid grid-cols-2 lg:grid-cols-5 w-full h-full gap-[1px] ${darkMode ? "bg-gray-700" : "bg-gray-300"}`}
+                  className={`grid grid-cols-2 lg:grid-cols-5 w-full gap-[1px] ${darkMode ? "bg-gray-700" : "bg-gray-300"}`}
                 >
                   <div
-                    className={`p-2 lg:p-6 flex flex-col items-center justify-center w-full h-full ${darkMode ? "bg-gray-800" : "bg-white"}`}
+                    className={`p-3 lg:p-6 flex flex-col items-center justify-center w-full ${darkMode ? "bg-gray-800" : "bg-white"}`}
                   >
                     <span className="text-[10px] lg:text-[13px] font-black uppercase tracking-wider text-gray-500 mb-1 text-center w-full">
                       Tensão
@@ -1692,7 +1731,7 @@ export default function App() {
                   </div>
 
                   <div
-                    className={`p-2 lg:p-6 flex flex-col items-center justify-center w-full h-full ${darkMode ? "bg-gray-800" : "bg-white"}`}
+                    className={`p-3 lg:p-6 flex flex-col items-center justify-center w-full ${darkMode ? "bg-gray-800" : "bg-white"}`}
                   >
                     <span className="text-[10px] lg:text-[13px] font-black uppercase tracking-wider text-gray-500 mb-1 text-center w-full">
                       Velocidade
@@ -1712,7 +1751,7 @@ export default function App() {
                   </div>
 
                   <div
-                    className={`p-2 lg:p-6 flex flex-col items-center justify-center w-full h-full ${darkMode ? "bg-gray-800" : "bg-white"}`}
+                    className={`p-3 lg:p-6 flex flex-col items-center justify-center w-full ${darkMode ? "bg-gray-800" : "bg-white"}`}
                   >
                     <span className="text-[10px] lg:text-[13px] font-black uppercase tracking-wider text-gray-500 mb-1 text-center w-full">
                       Rotação
@@ -1732,7 +1771,7 @@ export default function App() {
                   </div>
 
                   <div
-                    className={`p-2 lg:p-6 flex flex-col items-center justify-center w-full h-full ${darkMode ? "bg-gray-800" : "bg-white"}`}
+                    className={`p-3 lg:p-6 flex flex-col items-center justify-center w-full ${darkMode ? "bg-gray-800" : "bg-white"}`}
                   >
                     <span className="text-[10px] lg:text-[13px] font-black uppercase tracking-wider text-gray-500 mb-1 text-center w-full">
                       Temp. BMS
@@ -1752,7 +1791,7 @@ export default function App() {
                   </div>
 
                   <div
-                    className={`p-2 lg:p-6 flex flex-col items-center justify-center w-full h-full ${darkMode ? "bg-gray-800" : "bg-white"}`}
+                    className={`p-3 lg:p-6 flex flex-col items-center justify-center w-full ${darkMode ? "bg-gray-800" : "bg-white"}`}
                   >
                     <span className="text-[10px] lg:text-[13px] font-black uppercase tracking-wider text-gray-500 mb-1 text-center w-full">
                       Bateria
@@ -1767,7 +1806,7 @@ export default function App() {
                   </div>
 
                   <div
-                    className={`p-2 lg:p-6 flex flex-col items-center justify-center w-full h-full ${darkMode ? "bg-gray-800" : "bg-white"}`}
+                    className={`p-3 lg:p-6 flex flex-col items-center justify-center w-full ${darkMode ? "bg-gray-800" : "bg-white"}`}
                   >
                     <span className="text-[10px] lg:text-[13px] font-black uppercase tracking-wider text-gray-500 mb-1 text-center w-full">
                       Potência
@@ -1786,9 +1825,9 @@ export default function App() {
                     </div>
                   </div>
 
-                  {/* Correntes Mesclado*/}
+                  {/* Correntes Mesclado */}
                   <div
-                    className={`p-2 lg:p-6 flex flex-col items-center justify-center w-full h-full col-span-2 lg:col-span-2 ${darkMode ? "bg-gray-800" : "bg-white"}`}
+                    className={`p-3 lg:p-6 flex flex-col items-center justify-center w-full col-span-2 lg:col-span-2 ${darkMode ? "bg-gray-800" : "bg-white"}`}
                   >
                     <span className="text-[10px] lg:text-[13px] font-black uppercase tracking-wider text-gray-500 mb-2 w-full text-center">
                       Correntes
@@ -1835,7 +1874,7 @@ export default function App() {
                   </div>
 
                   <div
-                    className={`p-2 lg:p-6 flex flex-col items-center justify-center w-full h-full ${darkMode ? "bg-gray-800" : "bg-white"}`}
+                    className={`p-3 lg:p-6 flex flex-col items-center justify-center w-full ${darkMode ? "bg-gray-800" : "bg-white"}`}
                   >
                     <span className="text-[10px] lg:text-[13px] font-black uppercase tracking-wider text-gray-500 mb-1 text-center w-full">
                       S1 Status
@@ -1844,13 +1883,13 @@ export default function App() {
                       <span
                         className={`text-base lg:text-4xl font-bold ${darkMode ? "text-green-400" : "text-green-600"}`}
                       >
-                        {string_1} AAA
+                        {string_1} A
                       </span>
                     </div>
                   </div>
 
                   <div
-                    className={`p-2 lg:p-6 flex flex-col items-center justify-center w-full h-full ${darkMode ? "bg-gray-800" : "bg-white"}`}
+                    className={`p-3 lg:p-6 flex flex-col items-center justify-center w-full ${darkMode ? "bg-gray-800" : "bg-white"}`}
                   >
                     <span className="text-[10px] lg:text-[13px] font-black uppercase tracking-wider text-gray-500 mb-1 text-center w-full">
                       S2 Status
@@ -1859,13 +1898,14 @@ export default function App() {
                       <span
                         className={`text-base lg:text-4xl font-bold ${darkMode ? "text-rose-400" : "text-rose-600"}`}
                       >
-                        {string_2} AAAA
+                        {string_2} A
                       </span>
                     </div>
                   </div>
                 </div>
               </div>
             </div>
+
           ) : activeTab === "Logs de Dados" ? (
             <div className="h-full w-full max-w-5xl mx-auto flex flex-col animate-in fade-in duration-300 min-h-0">
               <div className="flex items-center space-x-3 mb-6 shrink-0">
