@@ -1475,7 +1475,7 @@ export default function App() {
             </div>
           ) : activeTab === "Resumo" ? (
             <div className="flex flex-col h-full w-full gap-2 md:gap-4 min-h-0 animate-in fade-in duration-300">
-              <div className="flex gap-2 md:gap-6 flex-col md:flex-row shrink-0 w-full min-h-0">
+              <div className="flex gap-2 md:gap-6 flex-col md:flex-row shrink-0 w-full">
                 <div
                   className={`hidden md:flex flex-[2] rounded-2xl p-4 md:p-6 shadow-sm border transition-colors duration-300 flex-col h-full min-h-0 ${darkMode ? "bg-gray-800 border-gray-700" : "bg-white border-gray-300 shadow-xl shadow-gray-200/50"}`}
                 >
@@ -1504,19 +1504,13 @@ export default function App() {
                           y1="0"
                           y2="1"
                         >
-                          <stop
-                            offset="0%"
-                            stopColor="#f97316"
-                            stopOpacity="0.4"
-                          />
-                          <stop
-                            offset="100%"
-                            stopColor="#f97316"
-                            stopOpacity="0.0"
-                          />
+                          <stop offset="0%" stopColor="#f97316" stopOpacity="0.4" />
+                          <stop offset="100%" stopColor="#f97316" stopOpacity="0.0" />
                         </linearGradient>
                       </defs>
-                      {[0, 50, 100, 150, 200].map((y) => (
+
+                      {/* Linhas de grelha secundárias */}
+                      {[50, 150].map((y) => (
                         <line
                           key={`grid-${y}`}
                           x1="0"
@@ -1528,49 +1522,54 @@ export default function App() {
                           strokeDasharray="5,5"
                         />
                       ))}
-                        <polygon
-                          // Calcula o "chão" dinâmico para fechar a sombra reta na base
-                          points={`${mainData.length > 0 ? 1000 - ((mainData.length - 1) * (1000 / 39)) : 1000},200 ${generatePolyline(mainData, 1000, 200, 5000)} 1000,200`}
-                          fill="url(#mainGradient)"
-                        />
-                        <polyline
-                          points={generatePolyline(mainData, 1000, 200, 5000)}
-                          fill="none"
-                          stroke="#ea580c"
-                          strokeWidth="4"
-                          strokeLinecap="round"
-                          strokeLinejoin="round"
-                          className="drop-shadow-md"
-                        />
-                      {/* <polygon
-                        points={`0,200 ${generatePolyline(mainData, 1000, 200, 750)} 1000,200`}
+
+                      {/* LINHA DE ZERO DESTACADA (Exatamente no y = 100) */}
+                      <line
+                        x1="0"
+                        y1="100"
+                        x2="1000"
+                        y2="100"
+                        stroke={darkMode ? "#ef4444" : "#f97316"}
+                        strokeWidth="2"
+                        strokeDasharray="4,4"
+                      />
+                      <text x="10" y="93" fill={darkMode ? "#9ca3af" : "#6b7280"} fontSize="12" fontWeight="bold">0 W</text>
+
+                      {/* Sombra e Polinésia do Gráfico */}
+                      <polygon
+                        points={`${mainData.length > 0 ? 1000 - ((mainData.length - 1) * (1000 / 39)) : 1000},100 ${generatePolyline(mainData, 1000, 200, 5000)} 1000,100`}
                         fill="url(#mainGradient)"
                       />
                       <polyline
-                        points={generatePolyline(mainData, 1000, 200, 750)}
+                        points={generatePolyline(mainData, 1000, 200, 5000)}
                         fill="none"
                         stroke="#ea580c"
                         strokeWidth="4"
                         strokeLinecap="round"
                         strokeLinejoin="round"
                         className="drop-shadow-md"
-                      /> */}
-                      <line
-                        x1="0"
-                        y1="200"
-                        x2="1000"
-                        y2="200"
-                        stroke={darkMode ? "#4b5563" : "#d1d5db"}
-                        strokeWidth="2"
                       />
-                      <line
-                        x1="0"
-                        y1="0"
-                        x2="0"
-                        y2="200"
-                        stroke={darkMode ? "#4b5563" : "#d1d5db"}
-                        strokeWidth="2"
-                      />
+
+                      {/* Pontos interativos invisíveis para o Hover (Tooltip nativo do SVG) */}
+                      {[...mainData].reverse().map((val, index) => {
+                        const stepX = 1000 / 39;
+                        const offsetX = 1000 - ((mainData.length - 1) * stepX);
+                        const x = offsetX + (index * stepX);
+                        const y = 100 - (val / 5000) * 100;
+
+                        return (
+                          <circle
+                            key={`point-${index}`}
+                            cx={x}
+                            cy={y}
+                            r="8"
+                            fill="transparent"
+                            className="cursor-pointer"
+                          >
+                            <title>{`Potência: ${val.toFixed(1)} W`}</title>
+                          </circle>
+                        );
+                      })}
                     </svg>
                   </div>
                 </div>
@@ -1583,7 +1582,7 @@ export default function App() {
                     Geral da Bateria (BMS)
                   </h2>
 
-                  <div className="my-3 md:flex-1 md:min-h-0 flex flex-col justify-center">
+                  <div className="my-3 md:flex-1 md:min-h-0 flex flex-col justify-start">
                     <div className="grid grid-cols-2 md:grid-cols-1 gap-1.5 md:gap-4 w-full">
                       <div
                         className={`flex flex-col md:flex-row justify-between items-center p-1.5 md:p-3 rounded-lg border text-center md:text-left ${darkMode ? "bg-gray-900 border-gray-700" : "bg-gray-50 border-gray-300"}`}
