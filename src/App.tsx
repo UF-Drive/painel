@@ -1853,14 +1853,17 @@ export default function App() {
                   </div>
 
                   <div
-                    className={`p-2 lg:p-6 flex flex-col items-center justify-center w-full h-full ${darkMode ? "bg-gray-800" : "bg-white"}`}
+                    className={`p-2 lg:p-6 flex flex-col items-center justify-center w-full min-h-[55px] lg:min-h-0 ${darkMode ? "bg-gray-800" : "bg-white"}`}
                   >
                     <span className="text-[10px] lg:text-[13px] font-black uppercase tracking-wider text-gray-500 mb-1 text-center w-full">
                       S1 Status
                     </span>
+
                     <div className="flex items-baseline justify-center">
                       <span
-                        className={`text-base lg:text-4xl font-bold ${darkMode ? "text-green-400" : "text-green-600"}`}
+                        className={`text-base lg:text-4xl font-bold ${
+                          darkMode ? "text-green-400" : "text-green-600"
+                        }`}
                       >
                         OK
                       </span>
@@ -1868,19 +1871,23 @@ export default function App() {
                   </div>
 
                   <div
-                    className={`p-2 lg:p-6 flex flex-col items-center justify-center w-full h-full ${darkMode ? "bg-gray-800" : "bg-white"}`}
+                    className={`p-2 lg:p-6 flex flex-col items-center justify-center w-full min-h-[55px] lg:min-h-0 ${darkMode ? "bg-gray-800" : "bg-white"}`}
                   >
                     <span className="text-[10px] lg:text-[13px] font-black uppercase tracking-wider text-gray-500 mb-1 text-center w-full">
                       S2 Status
                     </span>
+
                     <div className="flex items-baseline justify-center">
                       <span
-                        className={`text-base lg:text-4xl font-bold ${darkMode ? "text-rose-400" : "text-rose-600"}`}
+                        className={`text-base lg:text-4xl font-bold ${
+                          darkMode ? "text-rose-400" : "text-rose-600"
+                        }`}
                       >
                         WARN
                       </span>
                     </div>
                   </div>
+
                 </div>
               </div>
             </div>
