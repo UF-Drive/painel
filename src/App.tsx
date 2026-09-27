@@ -118,7 +118,7 @@ const GoogleIcon = ({ size = 24 }) => (
 
 export default function App() {
   
-  //#region Controle login
+  // #region Controle login
   const [isLogged, setisLogged] = useState(false);
   const [isLoggingIn, setIsLoggingIn] = useState(false);
 
@@ -1510,15 +1510,15 @@ export default function App() {
                         </linearGradient>
                       </defs>
 
-                      {/* Linhas de referência limpas (+5000W, 0W, -5000W) */}
-                      <line x1="0" y1="0" x2="1000" y2="0" stroke={darkMode ? "#374151" : "#e5e7eb"} strokeWidth="1" strokeDasharray="4,4" />
-                      <text x="12" y="14" fill="#9ca3af" fontSize="11" fontWeight="600">+5000 W</text>
+                      {/* Linhas de referência limpas e bem posicionadas para não esmagar */}
+                      <line x1="0" y1="10" x2="1000" y2="10" stroke={darkMode ? "#374151" : "#e5e7eb"} strokeWidth="1" strokeDasharray="4,4" />
+                      <text x="12" y="25" fill="#9ca3af" fontSize="12" fontWeight="600">+5000 W</text>
 
                       <line x1="0" y1="100" x2="1000" y2="100" stroke={darkMode ? "#ef4444" : "#f97316"} strokeWidth="2" strokeDasharray="4,4" />
-                      <text x="12" y="93" fill={darkMode ? "#ef4444" : "#f97316"} fontSize="12" fontWeight="bold">0 W</text>
+                      <text x="12" y="92" fill={darkMode ? "#ef4444" : "#f97316"} fontSize="13" fontWeight="bold">0 W</text>
 
-                      <line x1="0" y1="200" x2="1000" y2="200" stroke={darkMode ? "#374151" : "#e5e7eb"} strokeWidth="1" strokeDasharray="4,4" />
-                      <text x="12" y="193" fill="#9ca3af" fontSize="11" fontWeight="600">-5000 W</text>
+                      <line x1="0" y1="190" x2="1000" y2="190" stroke={darkMode ? "#374151" : "#e5e7eb"} strokeWidth="1" strokeDasharray="4,4" />
+                      <text x="12" y="185" fill="#9ca3af" fontSize="12" fontWeight="600">-5000 W</text>
 
                       {/* Sombra e Polinésia do Gráfico */}
                       <polygon
@@ -1535,7 +1535,7 @@ export default function App() {
                         className="drop-shadow-md"
                       />
 
-                      {/* Micropontos discretos e elegantes em cada medição */}
+                      {/* Micropontos pequenos, discretos e sem distorção */}
                       {[...mainData].reverse().map((val, index) => {
                         const stepX = 1000 / 39;
                         const offsetX = 1000 - ((mainData.length - 1) * stepX);
@@ -1547,7 +1547,7 @@ export default function App() {
                             <circle
                               cx={x}
                               cy={y}
-                              r="2.5"
+                              r="2"
                               fill="#ea580c"
                               stroke="#ffffff"
                               strokeWidth="1"
@@ -1555,7 +1555,7 @@ export default function App() {
                             <circle
                               cx={x}
                               cy={y}
-                              r="8"
+                              r="7"
                               fill="transparent"
                               className="cursor-pointer"
                             >
@@ -1653,7 +1653,7 @@ export default function App() {
                 </div>
               </div>
 
-              {/* Bloco inferior de Métricas do Sistema reorganizado para exibir S1 e S2 perfeitamente */}
+              {/* Bloco de Métricas do Sistema idêntico ao layout oficial em grid de 2 colunas simétricas sem buracos */}
               <div
                 className={`rounded-2xl shadow-sm overflow-hidden transition-colors duration-300 w-full flex flex-col ${darkMode ? "bg-gray-800 border border-gray-700" : "bg-white border border-gray-300 shadow-xl shadow-gray-200/50"}`}
               >
@@ -1664,12 +1664,13 @@ export default function App() {
                 </div>
 
                 <div
-                  className={`grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 w-full gap-[1px] ${darkMode ? "bg-gray-700" : "bg-gray-300"}`}
+                  className={`grid grid-cols-2 w-full gap-[1px] ${darkMode ? "bg-gray-700" : "bg-gray-300"}`}
                 >
+                  {/* Tensão */}
                   <div
-                    className={`p-3 lg:p-5 flex flex-col items-center justify-center w-full ${darkMode ? "bg-gray-800" : "bg-white"}`}
+                    className={`p-4 lg:p-6 flex flex-col items-center justify-center w-full ${darkMode ? "bg-gray-800" : "bg-white"}`}
                   >
-                    <span className="text-[10px] lg:text-[12px] font-black uppercase tracking-wider text-gray-500 mb-1 text-center w-full">
+                    <span className="text-[11px] lg:text-[13px] font-black uppercase tracking-wider text-gray-500 mb-1 text-center w-full">
                       Tensão
                     </span>
                     <div className="flex items-baseline justify-center">
@@ -1686,10 +1687,11 @@ export default function App() {
                     </div>
                   </div>
 
+                  {/* Velocidade */}
                   <div
-                    className={`p-3 lg:p-5 flex flex-col items-center justify-center w-full ${darkMode ? "bg-gray-800" : "bg-white"}`}
+                    className={`p-4 lg:p-6 flex flex-col items-center justify-center w-full ${darkMode ? "bg-gray-800" : "bg-white"}`}
                   >
-                    <span className="text-[10px] lg:text-[12px] font-black uppercase tracking-wider text-gray-500 mb-1 text-center w-full">
+                    <span className="text-[11px] lg:text-[13px] font-black uppercase tracking-wider text-gray-500 mb-1 text-center w-full">
                       Velocidade
                     </span>
                     <div className="flex items-baseline justify-center">
@@ -1706,10 +1708,11 @@ export default function App() {
                     </div>
                   </div>
 
+                  {/* Rotação */}
                   <div
-                    className={`p-3 lg:p-5 flex flex-col items-center justify-center w-full ${darkMode ? "bg-gray-800" : "bg-white"}`}
+                    className={`p-4 lg:p-6 flex flex-col items-center justify-center w-full ${darkMode ? "bg-gray-800" : "bg-white"}`}
                   >
-                    <span className="text-[10px] lg:text-[12px] font-black uppercase tracking-wider text-gray-500 mb-1 text-center w-full">
+                    <span className="text-[11px] lg:text-[13px] font-black uppercase tracking-wider text-gray-500 mb-1 text-center w-full">
                       Rotação
                     </span>
                     <div className="flex items-baseline justify-center">
@@ -1726,10 +1729,11 @@ export default function App() {
                     </div>
                   </div>
 
+                  {/* Temp. BMS */}
                   <div
-                    className={`p-3 lg:p-5 flex flex-col items-center justify-center w-full ${darkMode ? "bg-gray-800" : "bg-white"}`}
+                    className={`p-4 lg:p-6 flex flex-col items-center justify-center w-full ${darkMode ? "bg-gray-800" : "bg-white"}`}
                   >
-                    <span className="text-[10px] lg:text-[12px] font-black uppercase tracking-wider text-gray-500 mb-1 text-center w-full">
+                    <span className="text-[11px] lg:text-[13px] font-black uppercase tracking-wider text-gray-500 mb-1 text-center w-full">
                       Temp. BMS
                     </span>
                     <div className="flex items-baseline justify-center">
@@ -1746,10 +1750,11 @@ export default function App() {
                     </div>
                   </div>
 
+                  {/* Bateria */}
                   <div
-                    className={`p-3 lg:p-5 flex flex-col items-center justify-center w-full ${darkMode ? "bg-gray-800" : "bg-white"}`}
+                    className={`p-4 lg:p-6 flex flex-col items-center justify-center w-full ${darkMode ? "bg-gray-800" : "bg-white"}`}
                   >
-                    <span className="text-[10px] lg:text-[12px] font-black uppercase tracking-wider text-gray-500 mb-1 text-center w-full">
+                    <span className="text-[11px] lg:text-[13px] font-black uppercase tracking-wider text-gray-500 mb-1 text-center w-full">
                       Bateria
                     </span>
                     <div className="flex items-baseline justify-center">
@@ -1761,10 +1766,11 @@ export default function App() {
                     </div>
                   </div>
 
+                  {/* Potência */}
                   <div
-                    className={`p-3 lg:p-5 flex flex-col items-center justify-center w-full ${darkMode ? "bg-gray-800" : "bg-white"}`}
+                    className={`p-4 lg:p-6 flex flex-col items-center justify-center w-full ${darkMode ? "bg-gray-800" : "bg-white"}`}
                   >
-                    <span className="text-[10px] lg:text-[12px] font-black uppercase tracking-wider text-gray-500 mb-1 text-center w-full">
+                    <span className="text-[11px] lg:text-[13px] font-black uppercase tracking-wider text-gray-500 mb-1 text-center w-full">
                       Potência
                     </span>
                     <div className="flex items-baseline justify-center">
@@ -1781,45 +1787,51 @@ export default function App() {
                     </div>
                   </div>
 
-                  {/* Corrente Bateria */}
+                  {/* Correntes Mescladas (Exatamente igual ao print do celular: Bateria e Motor lado a lado) */}
                   <div
-                    className={`p-3 lg:p-5 flex flex-col items-center justify-center w-full ${darkMode ? "bg-gray-800" : "bg-white"}`}
+                    className={`p-4 lg:p-6 flex flex-col items-center justify-center w-full col-span-2 ${darkMode ? "bg-gray-800" : "bg-white"}`}
                   >
-                    <span className="text-[10px] lg:text-[12px] font-black uppercase tracking-wider text-gray-500 mb-1 text-center w-full">
-                      Corrente Bateria
+                    <span className="text-[11px] lg:text-[13px] font-black uppercase tracking-wider text-gray-500 mb-2 w-full text-center">
+                      Correntes
                     </span>
-                    <div className="flex items-baseline justify-center">
-                      <span className="text-xl lg:text-4xl font-light tracking-tight tabular-nums text-orange-500">
-                        {correnteRealBateria}
-                      </span>
-                      <span className="text-xs lg:text-xl font-medium ml-1.5 text-orange-500">
-                        A
-                      </span>
-                    </div>
-                  </div>
+                    <div className="flex flex-row w-full items-stretch">
+                      <div
+                        className={`flex flex-col items-center justify-center w-1/2 text-center border-r ${darkMode ? "border-gray-700" : "border-gray-300"}`}
+                      >
+                        <div className="flex items-baseline justify-center">
+                          <span className="text-2xl lg:text-4xl font-light tracking-tight tabular-nums text-orange-500">
+                            {correnteRealBateria}
+                          </span>
+                          <span className="text-xs lg:text-xl font-medium ml-1 text-orange-500">
+                            A
+                          </span>
+                        </div>
+                        <span className="text-[9px] lg:text-[10px] font-bold text-gray-400 uppercase mt-1">
+                          Bateria
+                        </span>
+                      </div>
 
-                  {/* Corrente Motor */}
-                  <div
-                    className={`p-3 lg:p-5 flex flex-col items-center justify-center w-full ${darkMode ? "bg-gray-800" : "bg-white"}`}
-                  >
-                    <span className="text-[10px] lg:text-[12px] font-black uppercase tracking-wider text-gray-500 mb-1 text-center w-full">
-                      Corrente Motor
-                    </span>
-                    <div className="flex items-baseline justify-center">
-                      <span className="text-xl lg:text-4xl font-light tracking-tight tabular-nums text-amber-500">
-                        {correnteMotor}
-                      </span>
-                      <span className="text-xs lg:text-xl font-medium ml-1.5 text-amber-500">
-                        A
-                      </span>
+                      <div className="flex flex-col items-center justify-center w-1/2 text-center">
+                        <div className="flex items-baseline justify-center">
+                          <span className="text-2xl lg:text-4xl font-light tracking-tight tabular-nums text-amber-500">
+                            {correnteMotor}
+                          </span>
+                          <span className="text-xs lg:text-xl font-medium ml-1 text-amber-500">
+                            A
+                          </span>
+                        </div>
+                        <span className="text-[9px] lg:text-[10px] font-bold text-gray-400 uppercase mt-1">
+                          Motor
+                        </span>
+                      </div>
                     </div>
                   </div>
 
                   {/* S1 Status */}
                   <div
-                    className={`p-3 lg:p-5 flex flex-col items-center justify-center w-full ${darkMode ? "bg-gray-800" : "bg-white"}`}
+                    className={`p-4 lg:p-6 flex flex-col items-center justify-center w-full ${darkMode ? "bg-gray-800" : "bg-white"}`}
                   >
-                    <span className="text-[10px] lg:text-[12px] font-black uppercase tracking-wider text-gray-500 mb-1 text-center w-full">
+                    <span className="text-[11px] lg:text-[13px] font-black uppercase tracking-wider text-gray-500 mb-1 text-center w-full">
                       S1 Status
                     </span>
                     <div className="flex items-baseline justify-center">
@@ -1831,9 +1843,9 @@ export default function App() {
 
                   {/* S2 Status */}
                   <div
-                    className={`p-3 lg:p-5 flex flex-col items-center justify-center w-full ${darkMode ? "bg-gray-800" : "bg-white"}`}
+                    className={`p-4 lg:p-6 flex flex-col items-center justify-center w-full ${darkMode ? "bg-gray-800" : "bg-white"}`}
                   >
-                    <span className="text-[10px] lg:text-[12px] font-black uppercase tracking-wider text-gray-500 mb-1 text-center w-full">
+                    <span className="text-[11px] lg:text-[13px] font-black uppercase tracking-wider text-gray-500 mb-1 text-center w-full">
                       S2 Status
                     </span>
                     <div className="flex items-baseline justify-center">
