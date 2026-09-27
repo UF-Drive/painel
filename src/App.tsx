@@ -1488,7 +1488,7 @@ export default function App() {
                   <div className="flex-1 w-full relative mt-2 min-h-0">
                     <svg
                       viewBox="0 0 1000 200"
-                      preserveAspectRatio="none"
+                      preserveAspectRatio="xMidYMid meet"
                       className="w-full h-full overflow-visible"
                     >
                       <defs>
@@ -1541,8 +1541,6 @@ export default function App() {
                         fill={darkMode ? "#9ca3af" : "#6b7280"} 
                         fontSize="12" 
                         fontWeight="bold"
-                        textLength="24"
-                        lengthAdjust="spacingAndGlyphs"
                         >                        
                           0 W
                       </text>
