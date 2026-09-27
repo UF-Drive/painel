@@ -1470,7 +1470,7 @@ export default function App() {
 
           ) : activeTab === "Resumo" ? (
             <div className="flex flex-col h-full w-full gap-2 md:gap-4 min-h-0 animate-in fade-in duration-300">
-              <div className="flex gap-2 md:gap-6 flex-col md:flex-row shrink-0 w-full min-h-0">
+              <div className="flex gap-2 md:gap-6 md:max-h-[45%] flex-col md:flex-row shrink-0 w-full min-h-0">
                 <div
                   className={`hidden md:flex flex-[2] rounded-2xl p-4 md:p-6 shadow-sm border transition-colors duration-300 flex-col h-full min-h-0 ${darkMode ? "bg-gray-800 border-gray-700" : "bg-white border-gray-300 shadow-xl shadow-gray-200/50"}`}
                 >
