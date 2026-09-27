@@ -1473,7 +1473,7 @@ export default function App() {
               </div>
               {/* #endregion */}
             </div>
-            
+
           ) : activeTab === "Resumo" ? (
             <div className="flex flex-col h-full w-full gap-2 md:gap-4 min-h-0 animate-in fade-in duration-300">
               <div className="flex gap-2 md:gap-6 flex-col md:flex-row shrink-0 w-full">
@@ -1510,57 +1510,15 @@ export default function App() {
                         </linearGradient>
                       </defs>
 
-                      {/* Linhas de grade de 1000 em 1000 W 
-                          Escala: +5000W é y=0, 0W é y=100, -5000W é y=200
-                          Portanto, cada 1000W equivale a 20 pixels de altura:
-                          +4000W -> y = 20
-                          +3000W -> y = 40
-                          +2000W -> y = 60
-                          +1000W -> y = 80
-                          0W     -> y = 100 (Linha Central Principal)
-                          -1000W -> y = 120
-                          -2000W -> y = 140
-                          -3000W -> y = 160
-                          -4000W -> y = 180
-                      */}
-                      {[20, 40, 60, 80, 120, 140, 160, 180].map((y) => {
-                        // Calcula o valor em Watts correspondente a esta linha
-                        const valW = (100 - y) * 50; 
-                        return (
-                          <g key={`grid-group-${y}`}>
-                            <line
-                              x1="0"
-                              y1={y}
-                              x2="1000"
-                              y2={y}
-                              stroke={darkMode ? "#374151" : "#f3f4f6"}
-                              strokeWidth="1"
-                              strokeDasharray="4,4"
-                            />
-                            <text 
-                              x="15" 
-                              y={y - 4} 
-                              fill={darkMode ? "#9ca3af" : "#9ca3af"} 
-                              fontSize="10" 
-                              fontWeight="600"
-                            >
-                              {valW > 0 ? `+${valW}W` : `${valW}W`}
-                            </text>
-                          </g>
-                        );
-                      })}
+                      {/* Linhas de referência limpas (+5000W, 0W, -5000W) */}
+                      <line x1="0" y1="0" x2="1000" y2="0" stroke={darkMode ? "#374151" : "#e5e7eb"} strokeWidth="1" strokeDasharray="4,4" />
+                      <text x="12" y="14" fill="#9ca3af" fontSize="11" fontWeight="600">+5000 W</text>
 
-                      {/* LINHA DE ZERO DESTACADA (Exatamente no y = 100) */}
-                      <line
-                        x1="0"
-                        y1="100"
-                        x2="1000"
-                        y2="100"
-                        stroke={darkMode ? "#ef4444" : "#f97316"}
-                        strokeWidth="2"
-                        strokeDasharray="4,4"
-                      />
-                      <text x="15" y="94" fill={darkMode ? "#ef4444" : "#f97316"} fontSize="11" fontWeight="bold">0 W</text>
+                      <line x1="0" y1="100" x2="1000" y2="100" stroke={darkMode ? "#ef4444" : "#f97316"} strokeWidth="2" strokeDasharray="4,4" />
+                      <text x="12" y="93" fill={darkMode ? "#ef4444" : "#f97316"} fontSize="12" fontWeight="bold">0 W</text>
+
+                      <line x1="0" y1="200" x2="1000" y2="200" stroke={darkMode ? "#374151" : "#e5e7eb"} strokeWidth="1" strokeDasharray="4,4" />
+                      <text x="12" y="193" fill="#9ca3af" fontSize="11" fontWeight="600">-5000 W</text>
 
                       {/* Sombra e Polinésia do Gráfico */}
                       <polygon
@@ -1571,13 +1529,13 @@ export default function App() {
                         points={generatePolyline(mainData, 1000, 200, 5000)}
                         fill="none"
                         stroke="#ea580c"
-                        strokeWidth="4"
+                        strokeWidth="3"
                         strokeLinecap="round"
                         strokeLinejoin="round"
                         className="drop-shadow-md"
                       />
 
-                      {/* Micropontos visíveis e interativos em cada medição */}
+                      {/* Micropontos discretos e elegantes em cada medição */}
                       {[...mainData].reverse().map((val, index) => {
                         const stepX = 1000 / 39;
                         const offsetX = 1000 - ((mainData.length - 1) * stepX);
@@ -1586,20 +1544,18 @@ export default function App() {
 
                         return (
                           <g key={`point-group-${index}`}>
-                            {/* Microponto visível na linha */}
                             <circle
                               cx={x}
                               cy={y}
-                              r="3.5"
+                              r="2.5"
                               fill="#ea580c"
                               stroke="#ffffff"
-                              strokeWidth="1.5"
+                              strokeWidth="1"
                             />
-                            {/* Área invisível maior para facilitar o hover com o rato */}
                             <circle
                               cx={x}
                               cy={y}
-                              r="10"
+                              r="8"
                               fill="transparent"
                               className="cursor-pointer"
                             >
@@ -1697,7 +1653,7 @@ export default function App() {
                 </div>
               </div>
 
-              {/* Bloco inferior de Métricas do Sistema com altura flexível ajustada para evitar cortes */}
+              {/* Bloco inferior de Métricas do Sistema reorganizado para exibir S1 e S2 perfeitamente */}
               <div
                 className={`rounded-2xl shadow-sm overflow-hidden transition-colors duration-300 w-full flex flex-col ${darkMode ? "bg-gray-800 border border-gray-700" : "bg-white border border-gray-300 shadow-xl shadow-gray-200/50"}`}
               >
@@ -1708,22 +1664,22 @@ export default function App() {
                 </div>
 
                 <div
-                  className={`grid grid-cols-2 lg:grid-cols-5 w-full gap-[1px] ${darkMode ? "bg-gray-700" : "bg-gray-300"}`}
+                  className={`grid grid-cols-2 sm:grid-cols-3 lg:grid-cols-4 w-full gap-[1px] ${darkMode ? "bg-gray-700" : "bg-gray-300"}`}
                 >
                   <div
-                    className={`p-3 lg:p-6 flex flex-col items-center justify-center w-full ${darkMode ? "bg-gray-800" : "bg-white"}`}
+                    className={`p-3 lg:p-5 flex flex-col items-center justify-center w-full ${darkMode ? "bg-gray-800" : "bg-white"}`}
                   >
-                    <span className="text-[10px] lg:text-[13px] font-black uppercase tracking-wider text-gray-500 mb-1 text-center w-full">
+                    <span className="text-[10px] lg:text-[12px] font-black uppercase tracking-wider text-gray-500 mb-1 text-center w-full">
                       Tensão
                     </span>
                     <div className="flex items-baseline justify-center">
                       <span
-                        className={`text-xl lg:text-5xl font-light tracking-tight tabular-nums ${darkMode ? "text-blue-400" : "text-blue-600"}`}
+                        className={`text-xl lg:text-4xl font-light tracking-tight tabular-nums ${darkMode ? "text-blue-400" : "text-blue-600"}`}
                       >
                         {tensaoReal}
                       </span>
                       <span
-                        className={`text-xs lg:text-2xl font-medium ml-1.5 ${darkMode ? "text-blue-400" : "text-blue-600"}`}
+                        className={`text-xs lg:text-xl font-medium ml-1.5 ${darkMode ? "text-blue-400" : "text-blue-600"}`}
                       >
                         V
                       </span>
@@ -1731,19 +1687,19 @@ export default function App() {
                   </div>
 
                   <div
-                    className={`p-3 lg:p-6 flex flex-col items-center justify-center w-full ${darkMode ? "bg-gray-800" : "bg-white"}`}
+                    className={`p-3 lg:p-5 flex flex-col items-center justify-center w-full ${darkMode ? "bg-gray-800" : "bg-white"}`}
                   >
-                    <span className="text-[10px] lg:text-[13px] font-black uppercase tracking-wider text-gray-500 mb-1 text-center w-full">
+                    <span className="text-[10px] lg:text-[12px] font-black uppercase tracking-wider text-gray-500 mb-1 text-center w-full">
                       Velocidade
                     </span>
                     <div className="flex items-baseline justify-center">
                       <span
-                        className={`text-xl lg:text-5xl font-light tracking-tight tabular-nums ${darkMode ? "text-teal-400" : "text-teal-600"}`}
+                        className={`text-xl lg:text-4xl font-light tracking-tight tabular-nums ${darkMode ? "text-teal-400" : "text-teal-600"}`}
                       >
                         {speed}
                       </span>
                       <span
-                        className={`text-xs lg:text-2xl font-medium ml-1.5 ${darkMode ? "text-teal-400" : "text-teal-600"}`}
+                        className={`text-xs lg:text-xl font-medium ml-1.5 ${darkMode ? "text-teal-400" : "text-teal-600"}`}
                       >
                         km/h
                       </span>
@@ -1751,19 +1707,19 @@ export default function App() {
                   </div>
 
                   <div
-                    className={`p-3 lg:p-6 flex flex-col items-center justify-center w-full ${darkMode ? "bg-gray-800" : "bg-white"}`}
+                    className={`p-3 lg:p-5 flex flex-col items-center justify-center w-full ${darkMode ? "bg-gray-800" : "bg-white"}`}
                   >
-                    <span className="text-[10px] lg:text-[13px] font-black uppercase tracking-wider text-gray-500 mb-1 text-center w-full">
+                    <span className="text-[10px] lg:text-[12px] font-black uppercase tracking-wider text-gray-500 mb-1 text-center w-full">
                       Rotação
                     </span>
                     <div className="flex items-baseline justify-center">
                       <span
-                        className={`text-xl lg:text-5xl font-light tracking-tight tabular-nums ${darkMode ? "text-gray-300" : "text-gray-700"}`}
+                        className={`text-xl lg:text-4xl font-light tracking-tight tabular-nums ${darkMode ? "text-gray-300" : "text-gray-700"}`}
                       >
                         {rpm}
                       </span>
                       <span
-                        className={`text-xs lg:text-2xl font-medium ml-1.5 ${darkMode ? "text-gray-400" : "text-gray-500"}`}
+                        className={`text-xs lg:text-xl font-medium ml-1.5 ${darkMode ? "text-gray-400" : "text-gray-500"}`}
                       >
                         RPM
                       </span>
@@ -1771,19 +1727,19 @@ export default function App() {
                   </div>
 
                   <div
-                    className={`p-3 lg:p-6 flex flex-col items-center justify-center w-full ${darkMode ? "bg-gray-800" : "bg-white"}`}
+                    className={`p-3 lg:p-5 flex flex-col items-center justify-center w-full ${darkMode ? "bg-gray-800" : "bg-white"}`}
                   >
-                    <span className="text-[10px] lg:text-[13px] font-black uppercase tracking-wider text-gray-500 mb-1 text-center w-full">
+                    <span className="text-[10px] lg:text-[12px] font-black uppercase tracking-wider text-gray-500 mb-1 text-center w-full">
                       Temp. BMS
                     </span>
                     <div className="flex items-baseline justify-center">
                       <span
-                        className={`text-xl lg:text-5xl font-light tracking-tight tabular-nums ${darkMode ? "text-red-400" : "text-red-600"}`}
+                        className={`text-xl lg:text-4xl font-light tracking-tight tabular-nums ${darkMode ? "text-red-400" : "text-red-600"}`}
                       >
                         {avgBmsTemp.toFixed(0)}
                       </span>
                       <span
-                        className={`text-xs lg:text-2xl font-medium ml-1.5 ${darkMode ? "text-red-400" : "text-red-600"}`}
+                        className={`text-xs lg:text-xl font-medium ml-1.5 ${darkMode ? "text-red-400" : "text-red-600"}`}
                       >
                         °C
                       </span>
@@ -1791,14 +1747,14 @@ export default function App() {
                   </div>
 
                   <div
-                    className={`p-3 lg:p-6 flex flex-col items-center justify-center w-full ${darkMode ? "bg-gray-800" : "bg-white"}`}
+                    className={`p-3 lg:p-5 flex flex-col items-center justify-center w-full ${darkMode ? "bg-gray-800" : "bg-white"}`}
                   >
-                    <span className="text-[10px] lg:text-[13px] font-black uppercase tracking-wider text-gray-500 mb-1 text-center w-full">
+                    <span className="text-[10px] lg:text-[12px] font-black uppercase tracking-wider text-gray-500 mb-1 text-center w-full">
                       Bateria
                     </span>
                     <div className="flex items-baseline justify-center">
                       <span
-                        className={`text-xl lg:text-5xl font-bold tracking-tight tabular-nums ${battery > 20 ? "text-green-500" : "text-red-500"}`}
+                        className={`text-xl lg:text-4xl font-bold tracking-tight tabular-nums ${battery > 20 ? "text-green-500" : "text-red-500"}`}
                       >
                         {battery}%
                       </span>
@@ -1806,98 +1762,82 @@ export default function App() {
                   </div>
 
                   <div
-                    className={`p-3 lg:p-6 flex flex-col items-center justify-center w-full ${darkMode ? "bg-gray-800" : "bg-white"}`}
+                    className={`p-3 lg:p-5 flex flex-col items-center justify-center w-full ${darkMode ? "bg-gray-800" : "bg-white"}`}
                   >
-                    <span className="text-[10px] lg:text-[13px] font-black uppercase tracking-wider text-gray-500 mb-1 text-center w-full">
+                    <span className="text-[10px] lg:text-[12px] font-black uppercase tracking-wider text-gray-500 mb-1 text-center w-full">
                       Potência
                     </span>
                     <div className="flex items-baseline justify-center">
                       <span
-                        className={`text-xl lg:text-5xl font-light tracking-tight tabular-nums ${darkMode ? "text-yellow-300" : "text-yellow-500"}`}
+                        className={`text-xl lg:text-4xl font-light tracking-tight tabular-nums ${darkMode ? "text-yellow-300" : "text-yellow-500"}`}
                       >
                         {currentPower}
                       </span>
                       <span
-                        className={`text-xs lg:text-2xl font-medium ml-1.5 ${darkMode ? "text-yellow-300" : "text-yellow-500"}`}
+                        className={`text-xs lg:text-xl font-medium ml-1.5 ${darkMode ? "text-yellow-300" : "text-yellow-500"}`}
                       >
                         W
                       </span>
                     </div>
                   </div>
 
-                  {/* Correntes Mesclado */}
+                  {/* Corrente Bateria */}
                   <div
-                    className={`p-3 lg:p-6 flex flex-col items-center justify-center w-full col-span-2 lg:col-span-2 ${darkMode ? "bg-gray-800" : "bg-white"}`}
+                    className={`p-3 lg:p-5 flex flex-col items-center justify-center w-full ${darkMode ? "bg-gray-800" : "bg-white"}`}
                   >
-                    <span className="text-[10px] lg:text-[13px] font-black uppercase tracking-wider text-gray-500 mb-2 w-full text-center">
-                      Correntes
+                    <span className="text-[10px] lg:text-[12px] font-black uppercase tracking-wider text-gray-500 mb-1 text-center w-full">
+                      Corrente Bateria
                     </span>
-                    <div className="flex flex-row w-full items-stretch">
-                      <div
-                        className={`flex flex-col items-center justify-center w-1/2 text-center border-r ${darkMode ? "border-gray-700" : "border-gray-300"}`}
-                      >
-                        <div className="flex items-baseline justify-center">
-                          <span
-                            className={`text-2xl lg:text-5xl font-light tracking-tight tabular-nums text-orange-500`}
-                          >
-                            {correnteRealBateria}
-                          </span>
-                          <span
-                            className={`text-xs lg:text-2xl font-medium ml-1 text-orange-500`}
-                          >
-                            A
-                          </span>
-                        </div>
-                        <span className="text-[8px] lg:text-[10px] font-bold text-gray-400 uppercase mt-1">
-                          Bateria
-                        </span>
-                      </div>
-
-                      <div className="flex flex-col items-center justify-center w-1/2 text-center">
-                        <div className="flex items-baseline justify-center">
-                          <span
-                            className={`text-2xl lg:text-5xl font-light tracking-tight tabular-nums text-amber-500`}
-                          >
-                            {correnteMotor}
-                          </span>
-                          <span
-                            className={`text-xs lg:text-2xl font-medium ml-1 text-amber-500`}
-                          >
-                            A
-                          </span>
-                        </div>
-                        <span className="text-[8px] lg:text-[10px] font-bold text-gray-400 uppercase mt-1">
-                          Motor
-                        </span>
-                      </div>
+                    <div className="flex items-baseline justify-center">
+                      <span className="text-xl lg:text-4xl font-light tracking-tight tabular-nums text-orange-500">
+                        {correnteRealBateria}
+                      </span>
+                      <span className="text-xs lg:text-xl font-medium ml-1.5 text-orange-500">
+                        A
+                      </span>
                     </div>
                   </div>
 
+                  {/* Corrente Motor */}
                   <div
-                    className={`p-3 lg:p-6 flex flex-col items-center justify-center w-full ${darkMode ? "bg-gray-800" : "bg-white"}`}
+                    className={`p-3 lg:p-5 flex flex-col items-center justify-center w-full ${darkMode ? "bg-gray-800" : "bg-white"}`}
                   >
-                    <span className="text-[10px] lg:text-[13px] font-black uppercase tracking-wider text-gray-500 mb-1 text-center w-full">
+                    <span className="text-[10px] lg:text-[12px] font-black uppercase tracking-wider text-gray-500 mb-1 text-center w-full">
+                      Corrente Motor
+                    </span>
+                    <div className="flex items-baseline justify-center">
+                      <span className="text-xl lg:text-4xl font-light tracking-tight tabular-nums text-amber-500">
+                        {correnteMotor}
+                      </span>
+                      <span className="text-xs lg:text-xl font-medium ml-1.5 text-amber-500">
+                        A
+                      </span>
+                    </div>
+                  </div>
+
+                  {/* S1 Status */}
+                  <div
+                    className={`p-3 lg:p-5 flex flex-col items-center justify-center w-full ${darkMode ? "bg-gray-800" : "bg-white"}`}
+                  >
+                    <span className="text-[10px] lg:text-[12px] font-black uppercase tracking-wider text-gray-500 mb-1 text-center w-full">
                       S1 Status
                     </span>
                     <div className="flex items-baseline justify-center">
-                      <span
-                        className={`text-base lg:text-4xl font-bold ${darkMode ? "text-green-400" : "text-green-600"}`}
-                      >
+                      <span className={`text-base lg:text-3xl font-bold ${darkMode ? "text-green-400" : "text-green-600"}`}>
                         {string_1} A
                       </span>
                     </div>
                   </div>
 
+                  {/* S2 Status */}
                   <div
-                    className={`p-3 lg:p-6 flex flex-col items-center justify-center w-full ${darkMode ? "bg-gray-800" : "bg-white"}`}
+                    className={`p-3 lg:p-5 flex flex-col items-center justify-center w-full ${darkMode ? "bg-gray-800" : "bg-white"}`}
                   >
-                    <span className="text-[10px] lg:text-[13px] font-black uppercase tracking-wider text-gray-500 mb-1 text-center w-full">
+                    <span className="text-[10px] lg:text-[12px] font-black uppercase tracking-wider text-gray-500 mb-1 text-center w-full">
                       S2 Status
                     </span>
                     <div className="flex items-baseline justify-center">
-                      <span
-                        className={`text-base lg:text-4xl font-bold ${darkMode ? "text-rose-400" : "text-rose-600"}`}
-                      >
+                      <span className={`text-base lg:text-3xl font-bold ${darkMode ? "text-rose-400" : "text-rose-600"}`}>
                         {string_2} A
                       </span>
                     </div>
