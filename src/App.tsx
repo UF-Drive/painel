@@ -27,7 +27,7 @@ interface Member {
 // #region --- Funções Auxiliares ---
 
 const generatePolyline = (data: number[], width: number, height: number, maxVal: number) => {
-  if (data.length === 0) return "1000,200";
+  if (data.length === 0) return "1000,${height / 2}";
   
   const stepX = width / 39; // Trava a distância para 40 pontos máximos
   
@@ -40,7 +40,7 @@ const generatePolyline = (data: number[], width: number, height: number, maxVal:
   return reversedData
     .map((val: number, index: number) => {
       const x = offsetX + (index * stepX);
-      const y = height - (val / maxVal) * height;
+      const y = (height / 2) - (val / maxVal) * (height / 2);
       return `${x},${y}`;
     })
     .join(" ");
@@ -1467,9 +1467,10 @@ export default function App() {
               </div>
               {/* #endregion */}
             </div>
+
           ) : activeTab === "Resumo" ? (
             <div className="flex flex-col h-full w-full gap-2 md:gap-4 min-h-0 animate-in fade-in duration-300">
-              <div className="flex gap-2 md:gap-6 md:max-h-[45%] flex-col md:flex-row shrink-0 w-full min-h-0">
+              <div className="flex gap-2 md:gap-6 flex-col md:flex-row shrink-0 w-full min-h-0">
                 <div
                   className={`hidden md:flex flex-[2] rounded-2xl p-4 md:p-6 shadow-sm border transition-colors duration-300 flex-col h-full min-h-0 ${darkMode ? "bg-gray-800 border-gray-700" : "bg-white border-gray-300 shadow-xl shadow-gray-200/50"}`}
                 >
@@ -1510,6 +1511,7 @@ export default function App() {
                           />
                         </linearGradient>
                       </defs>
+
                       {[0, 50, 100, 150, 200].map((y) => (
                         <line
                           key={`grid-${y}`}
@@ -1522,13 +1524,36 @@ export default function App() {
                           strokeDasharray="5,5"
                         />
                       ))}
+
+                      {/* LINHA DE ZERO DESTACADA (Exatamente no y = 100) */}
+                      <line
+                        x1="0"
+                        y1="100"
+                        x2="1000"
+                        y2="100"
+                        stroke={darkMode ? "#ef4444" : "#f97316"}
+                        strokeWidth="2"
+                        strokeDasharray="4,4"
+                      />
+                      <text 
+                        x="10" 
+                        y="93" 
+                        fill={darkMode ? "#9ca3af" : "#6b7280"} 
+                        fontSize="12" 
+                        fontWeight="bold"
+                        textLength="24"
+                        lengthAdjust="spacingAndGlyphs"
+                        >                        
+                          0 W
+                      </text>
+
                         <polygon
                           // Calcula o "chão" dinâmico para fechar a sombra reta na base
-                          points={`${mainData.length > 0 ? 1000 - ((mainData.length - 1) * (1000 / 39)) : 1000},200 ${generatePolyline(mainData, 1000, 200, 1500)} 1000,200`}
+                          points={`${mainData.length > 0 ? 1000 - ((mainData.length - 1) * (1000 / 39)) : 1000},100 ${generatePolyline(mainData, 1000, 200, 5000)} 1000,100`}
                           fill="url(#mainGradient)"
                         />
                         <polyline
-                          points={generatePolyline(mainData, 1000, 200, 1500)}
+                          points={generatePolyline(mainData, 1000, 200, 5000)}
                           fill="none"
                           stroke="#ea580c"
                           strokeWidth="4"
