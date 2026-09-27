@@ -1477,8 +1477,9 @@ export default function App() {
           ) : activeTab === "Resumo" ? (
             <div className="flex flex-col h-full w-full gap-2 md:gap-4 min-h-0 animate-in fade-in duration-300">
               <div className="flex gap-2 md:gap-6 flex-col md:flex-row shrink-0 w-full">
+                {/* Gráfico Principal Ajustado para Não Ficar Esmagado em Telas Pequenas */}
                 <div
-                  className={`hidden md:flex flex-[2] rounded-2xl p-4 md:p-6 shadow-sm border transition-colors duration-300 flex-col h-full min-h-0 ${darkMode ? "bg-gray-800 border-gray-700" : "bg-white border-gray-300 shadow-xl shadow-gray-200/50"}`}
+                  className={`flex flex-[2] rounded-2xl p-4 md:p-6 shadow-sm border transition-colors duration-300 flex-col h-64 md:h-full min-h-0 ${darkMode ? "bg-gray-800 border-gray-700" : "bg-white border-gray-300 shadow-xl shadow-gray-200/50"}`}
                 >
                   <div className="flex justify-between items-center mb-2">
                     <h2 className="text-lg font-bold flex items-center shrink-0">
@@ -1510,7 +1511,6 @@ export default function App() {
                         </linearGradient>
                       </defs>
 
-                      {/* Linhas de referência limpas e bem posicionadas para não esmagar */}
                       <line x1="0" y1="10" x2="1000" y2="10" stroke={darkMode ? "#374151" : "#e5e7eb"} strokeWidth="1" strokeDasharray="4,4" />
                       <text x="12" y="25" fill="#9ca3af" fontSize="12" fontWeight="600">+5000 W</text>
 
@@ -1520,7 +1520,6 @@ export default function App() {
                       <line x1="0" y1="190" x2="1000" y2="190" stroke={darkMode ? "#374151" : "#e5e7eb"} strokeWidth="1" strokeDasharray="4,4" />
                       <text x="12" y="185" fill="#9ca3af" fontSize="12" fontWeight="600">-5000 W</text>
 
-                      {/* Sombra e Polinésia do Gráfico */}
                       <polygon
                         points={`${mainData.length > 0 ? 1000 - ((mainData.length - 1) * (1000 / 39)) : 1000},100 ${generatePolyline(mainData, 1000, 200, 5000)} 1000,100`}
                         fill="url(#mainGradient)"
@@ -1534,36 +1533,6 @@ export default function App() {
                         strokeLinejoin="round"
                         className="drop-shadow-md"
                       />
-
-                      {/* Micropontos pequenos, discretos e sem distorção */}
-                      {[...mainData].reverse().map((val, index) => {
-                        const stepX = 1000 / 39;
-                        const offsetX = 1000 - ((mainData.length - 1) * stepX);
-                        const x = offsetX + (index * stepX);
-                        const y = 100 - (val / 5000) * 100;
-
-                        return (
-                          <g key={`point-group-${index}`}>
-                            <circle
-                              cx={x}
-                              cy={y}
-                              r="2"
-                              fill="#ea580c"
-                              stroke="#ffffff"
-                              strokeWidth="1"
-                            />
-                            <circle
-                              cx={x}
-                              cy={y}
-                              r="7"
-                              fill="transparent"
-                              className="cursor-pointer"
-                            >
-                              <title>{`Potência: ${val.toFixed(1)} W`}</title>
-                            </circle>
-                          </g>
-                        );
-                      })}
                     </svg>
                   </div>
                 </div>
@@ -1653,18 +1622,18 @@ export default function App() {
                 </div>
               </div>
 
-              {/* Bloco de Métricas do Sistema idêntico ao layout oficial em grid de 2 colunas simétricas sem buracos */}
+              {/* Bloco de Métricas do Sistema: Centralizado e em grid exato de 3 em 3 colunas */}
               <div
                 className={`rounded-2xl shadow-sm overflow-hidden transition-colors duration-300 w-full flex flex-col ${darkMode ? "bg-gray-800 border border-gray-700" : "bg-white border border-gray-300 shadow-xl shadow-gray-200/50"}`}
               >
                 <div
-                  className={`hidden md:block p-3 border-b shrink-0 ${darkMode ? "border-gray-700 bg-gray-800" : "border-gray-300 bg-gray-50"}`}
+                  className={`p-3 border-b shrink-0 text-center ${darkMode ? "border-gray-700 bg-gray-800" : "border-gray-300 bg-gray-50"}`}
                 >
                   <h2 className="text-lg font-bold">Métricas do Sistema</h2>
                 </div>
 
                 <div
-                  className={`grid grid-cols-2 w-full gap-[1px] ${darkMode ? "bg-gray-700" : "bg-gray-300"}`}
+                  className={`grid grid-cols-1 sm:grid-cols-2 md:grid-cols-3 w-full gap-[1px] ${darkMode ? "bg-gray-700" : "bg-gray-300"}`}
                 >
                   {/* Tensão */}
                   <div
@@ -1787,9 +1756,9 @@ export default function App() {
                     </div>
                   </div>
 
-                  {/* Correntes Mescladas (Exatamente igual ao print do celular: Bateria e Motor lado a lado) */}
+                  {/* Correntes (Bateria e Motor lado a lado) */}
                   <div
-                    className={`p-4 lg:p-6 flex flex-col items-center justify-center w-full col-span-2 ${darkMode ? "bg-gray-800" : "bg-white"}`}
+                    className={`p-4 lg:p-6 flex flex-col items-center justify-center w-full ${darkMode ? "bg-gray-800" : "bg-white"}`}
                   >
                     <span className="text-[11px] lg:text-[13px] font-black uppercase tracking-wider text-gray-500 mb-2 w-full text-center">
                       Correntes
@@ -1799,10 +1768,10 @@ export default function App() {
                         className={`flex flex-col items-center justify-center w-1/2 text-center border-r ${darkMode ? "border-gray-700" : "border-gray-300"}`}
                       >
                         <div className="flex items-baseline justify-center">
-                          <span className="text-2xl lg:text-4xl font-light tracking-tight tabular-nums text-orange-500">
+                          <span className="text-xl lg:text-3xl font-light tracking-tight tabular-nums text-orange-500">
                             {correnteRealBateria}
                           </span>
-                          <span className="text-xs lg:text-xl font-medium ml-1 text-orange-500">
+                          <span className="text-xs lg:text-base font-medium ml-1 text-orange-500">
                             A
                           </span>
                         </div>
@@ -1813,10 +1782,10 @@ export default function App() {
 
                       <div className="flex flex-col items-center justify-center w-1/2 text-center">
                         <div className="flex items-baseline justify-center">
-                          <span className="text-2xl lg:text-4xl font-light tracking-tight tabular-nums text-amber-500">
+                          <span className="text-xl lg:text-3xl font-light tracking-tight tabular-nums text-amber-500">
                             {correnteMotor}
                           </span>
-                          <span className="text-xs lg:text-xl font-medium ml-1 text-amber-500">
+                          <span className="text-xs lg:text-base font-medium ml-1 text-amber-500">
                             A
                           </span>
                         </div>
